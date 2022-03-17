@@ -6,7 +6,8 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Handle, Position } from "react-flow-renderer";
-
+import { Data } from "../Tree/assets/tree";
+import { Link } from "react-router-dom";
 const bull = (
   <Box
     component='span'
@@ -15,30 +16,33 @@ const bull = (
   </Box>
 );
 
-export default function CustomCard() {
+const CustomCard: React.FC<{ data: Data }> = ({ data }) => {
+  console.log(data);
   return (
-    <Card sx={{ minWidth: 275 }}>
+    <Card
+      sx={{ minWidth: 275 }}
+      style={{
+        maxWidth: "350px",
+      }}>
       <Handle type='target' position={Position.Top} />
       <Handle type='source' position={Position.Bottom} />
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color='text.secondary' gutterBottom>
-          Word of the Day
+          {data.level}
         </Typography>
         <Typography variant='h5' component='div'>
-          be{bull}nev{bull}o{bull}lent
+          {data.id}
         </Typography>
-        <Typography sx={{ mb: 1.5 }} color='text.secondary'>
-          adjective
-        </Typography>
-        <Typography variant='body2'>
-          well meaning and kindly.
-          <br />
-          {'"a benevolent smile"'}
-        </Typography>
+        <Typography sx={{ mb: 1.5 }} color='text.secondary'></Typography>
+        <Typography variant='body2'>{data.description}</Typography>
       </CardContent>
       <CardActions>
-        <Button size='small'>Learn More</Button>
+        <Button size='small'>
+          <a href={data.resource}> Resource </a>
+        </Button>
       </CardActions>
     </Card>
   );
-}
+};
+
+export default CustomCard;
