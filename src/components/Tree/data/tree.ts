@@ -1,6 +1,4 @@
-import React from "react";
 import { Edge, Node } from "react-flow-renderer";
-import BasicCard from "../../Card/Card";
 
 export interface Data {
   id: string;
@@ -30,4 +28,6 @@ export const nodes: Node[] = [
   },
 ];
 
-export const edges: Edge[] = [{ id: "e1-2", source: "1", target: "2" }];
+export const edges: Edge[] = [
+  { id: "e1-2", source: "1", target: "2", type: "floating" },
+];

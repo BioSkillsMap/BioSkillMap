@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect, FC, useState } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -6,8 +6,9 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Handle, Position } from "react-flow-renderer";
-import { Data } from "../Tree/assets/tree";
-import { Link } from "react-router-dom";
+import { insertEdges$ } from "../Toolbar/Buttons/Add-Edge/AddEdge";
+import { Data } from "../Tree/data/tree";
+
 const bull = (
   <Box
     component='span'
@@ -16,16 +17,31 @@ const bull = (
   </Box>
 );
 
-const CustomCard: React.FC<{ data: Data }> = ({ data }) => {
-  console.log(data);
+const CustomCard: FC<{ data: Data }> = ({ data }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  useEffect(() => {
+    insertEdges$.subscribe(setIsEditing);
+  }, []);
   return (
     <Card
       sx={{ minWidth: 275 }}
       style={{
         maxWidth: "350px",
       }}>
-      <Handle type='target' position={Position.Top} />
-      <Handle type='source' position={Position.Bottom} />
+      <Handle
+        style={{
+          position: "absolute",
+          top: 0,
+          visibility: isEditing ? "visible" : "hidden",
+          width: "100%",
+          height: "100%",
+          borderRadius: "0",
+          border: "none",
+          background: "transparent",
+          zIndex: "1",
+        }}
+        type='source'
+      />
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color='text.secondary' gutterBottom>
           {data.level}
