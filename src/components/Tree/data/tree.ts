@@ -1,10 +1,13 @@
-import { Edge, Node } from "react-flow-renderer";
+import { Dispatch, SetStateAction } from "react";
+import { Connection, Edge, Node } from "react-flow-renderer";
 
 export interface Data {
   id: string;
+  CardId: string;
   resource: string;
   level: "beginner" | "intermediate" | "advanced" | "Roxy";
   description: string;
+  setEdges: Dispatch<SetStateAction<Edge<any>[]>>;
 }
 
 export const nodes: Node[] = [
@@ -13,6 +16,7 @@ export const nodes: Node[] = [
     type: "Card",
     data: {
       id: "Web Development",
+      CardId: "1",
       resource: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
       level: "beginner",
       description:
@@ -23,11 +27,20 @@ export const nodes: Node[] = [
   {
     id: "2",
     type: "Card",
-    data: {} as Data,
+    data: {
+      CardId: "2",
+    } as Data,
     position: { x: 100, y: 100 },
   },
 ];
 
 export const edges: Edge[] = [
   { id: "e1-2", source: "1", target: "2", type: "floating" },
+  // {
+  //   id: "e2-e1",
+  //   source: "2",
+  //   target: "1",
+  //   targetHandle: "fedora",
+  //   type: "floating",
+  // },
 ];

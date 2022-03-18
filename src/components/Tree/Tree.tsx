@@ -1,5 +1,5 @@
 import { useObservable } from "observable-hooks";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ReactFlow, {
   addEdge,
   Controls,
@@ -15,7 +15,7 @@ import { withLatestFrom } from "rxjs";
 import { trigger$ } from "../Toolbar/Buttons/Add-Card/AddCard";
 import { insertEdges$ } from "../Toolbar/Buttons/Add-Edge/AddEdge";
 import CustomCard from "../Card/Card";
-
+import { newEdge$ } from "../Card/Card";
 import {
   nodes as initialNodes,
   edges as initialEdges,
@@ -52,11 +52,23 @@ const OverviewFlow = () => {
     trigger$.pipe(withLatestFrom(nodes$)).subscribe(([_, [nodes]]) => {
       handleAddFile(nodes);
     });
+    newEdge$.subscribe((connection) => {
+      console.log(connection);
+      setEdges((currentEdges) => {
+        const newEdges = addEdge(connection, currentEdges);
+        console.log(newEdges);
+        return newEdges;
+      });
+    });
   }, []);
-  const onConnect = (connection: Connection) => {
-    console.log(connection);
-    setEdges((eds) => addEdge(connection, eds));
-  };
+
+  // const onConnect = useCallback(
+  //   (connection) => {
+  //     console.log(connection);
+  //     return setEdges((eds) => addEdge(connection, eds));
+  //   },
+  //   [setEdges]
+  // );
 
   return (
     <ReactFlow
@@ -67,8 +79,12 @@ const OverviewFlow = () => {
         onNodesChange(nodeChanges);
         insertEdges$.next(false);
       }}
-      onEdgesChange={onEdgesChange}
-      onConnect={onConnect}
+      // onConnect={onConnect}
+      onEdgesChange={(r) => {
+        console.log(r);
+        console.log("From on edge");
+        onEdgesChange(r);
+      }}
       fitView
       nodeTypes={nodeTypes}
       attributionPosition='top-right'>

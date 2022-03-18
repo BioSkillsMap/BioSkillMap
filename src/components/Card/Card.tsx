@@ -1,13 +1,22 @@
-import { useEffect, FC, useState } from "react";
+import { useEffect, FC, useState, useRef } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Handle, Position } from "react-flow-renderer";
+import { CardTypeMap } from "@mui/material";
+import {
+  addEdge,
+  Connection,
+  Handle,
+  Position,
+  useUpdateNodeInternals,
+} from "react-flow-renderer";
 import { insertEdges$ } from "../Toolbar/Buttons/Add-Edge/AddEdge";
 import { Data } from "../Tree/data/tree";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
+import { Subject } from "rxjs";
 
 const bull = (
   <Box
@@ -16,12 +25,19 @@ const bull = (
     •
   </Box>
 );
-
+const handler$ = new Subject<{ id: string; handler: JSX.Element }>();
+export const newEdge$ = new Subject<Connection>();
 const CustomCard: FC<{ data: Data }> = ({ data }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [handlers, setHandlers] = useState([] as JSX.Element[]);
   useEffect(() => {
     insertEdges$.subscribe(setIsEditing);
+    handler$.subscribe(({ id, handler }) => {
+      if (id === data.CardId) setHandlers([...handlers, handler]);
+    });
   }, []);
+  const updateNodeInternals = useUpdateNodeInternals();
+
   return (
     <Card
       sx={{ minWidth: 275 }}
@@ -40,8 +56,31 @@ const CustomCard: FC<{ data: Data }> = ({ data }) => {
           background: "transparent",
           zIndex: "1",
         }}
+        onConnect={({ source, sourceHandle, target, targetHandle }) => {
+          handler$.next({
+            id: target!,
+            handler: (
+              <Handle
+                position={Position.Left}
+                type='target'
+                id='f'
+                key={`${source} ${sourceHandle} ${target} ${targetHandle}`}
+              />
+            ),
+          });
+          updateNodeInternals(target!);
+          setTimeout(() => {
+            newEdge$.next({
+              source,
+              sourceHandle,
+              target,
+              targetHandle: "f",
+            });
+          }, 2000);
+        }}
         type='source'
       />
+      {handlers.map((handler) => handler)}
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color='text.secondary' gutterBottom>
           {data.level}
