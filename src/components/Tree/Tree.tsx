@@ -13,7 +13,6 @@ import ReactFlow, {
 } from "react-flow-renderer";
 import { withLatestFrom } from "rxjs";
 import { trigger$ } from "../Toolbar/Buttons/Add-Card/AddCard";
-import { insertEdges$ } from "../Toolbar/Buttons/Add-Edge/AddEdge";
 import CustomCard from "../Card/Card";
 import { newEdge$ } from "../Card/Card";
 import {
@@ -76,8 +75,8 @@ const OverviewFlow = () => {
       nodes={nodes}
       edges={edges}
       onNodesChange={(nodeChanges) => {
+        console.log(nodeChanges);
         onNodesChange(nodeChanges);
-        insertEdges$.next(false);
       }}
       // onConnect={onConnect}
       onEdgesChange={(r) => {

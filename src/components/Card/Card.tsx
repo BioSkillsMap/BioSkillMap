@@ -69,14 +69,12 @@ const CustomCard: FC<{ data: Data }> = ({ data }) => {
             ),
           });
           updateNodeInternals(target!);
-          setTimeout(() => {
-            newEdge$.next({
-              source,
-              sourceHandle,
-              target,
-              targetHandle: "f",
-            });
-          }, 2000);
+          newEdge$.next({
+            source,
+            sourceHandle,
+            target,
+            targetHandle: "f",
+          });
         }}
         type='source'
       />
