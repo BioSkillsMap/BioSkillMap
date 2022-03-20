@@ -11,12 +11,15 @@ import {
   Connection,
   Handle,
   Position,
+  useReactFlow,
   useUpdateNodeInternals,
 } from "react-flow-renderer";
 import { insertEdges$ } from "../Toolbar/Buttons/Add-Edge/AddEdge";
 import { Data } from "../Tree/data/tree";
-import { OverridableComponent } from "@mui/material/OverridableComponent";
-import { Subject } from "rxjs";
+import { first, Subject } from "rxjs";
+import { useAppDispatch, useAppSelector } from "../../../redux-hooks";
+import { addHandler } from "./card-slice";
+import { mousePosition$ } from "../Tree/Tree";
 
 const bull = (
   <Box
@@ -25,19 +28,20 @@ const bull = (
     •
   </Box>
 );
-const handler$ = new Subject<{ id: string; handler: JSX.Element }>();
+// const handler$ = new Subject<{ id: string; handler: JSX.Element }>();
 export const newEdge$ = new Subject<Connection>();
-const CustomCard: FC<{ data: Data }> = ({ data }) => {
+const CustomCard: FC<{ data: Data; id: string }> = ({ data, id }) => {
+  const ReactFlowInstance = useReactFlow();
   const [isEditing, setIsEditing] = useState(false);
-  const [handlers, setHandlers] = useState([] as JSX.Element[]);
+  const handler = useAppSelector(({ handler }) => handler);
+  const dispatch = useAppDispatch();
   useEffect(() => {
     insertEdges$.subscribe(setIsEditing);
-    handler$.subscribe(({ id, handler }) => {
-      if (id === data.CardId) setHandlers([...handlers, handler]);
-    });
   }, []);
   const updateNodeInternals = useUpdateNodeInternals();
-
+  useEffect(() => {
+    console.log(handler);
+  }, [handler]);
   return (
     <Card
       sx={{ minWidth: 275 }}
@@ -57,28 +61,56 @@ const CustomCard: FC<{ data: Data }> = ({ data }) => {
           zIndex: "1",
         }}
         onConnect={({ source, sourceHandle, target, targetHandle }) => {
-          handler$.next({
-            id: target!,
-            handler: (
-              <Handle
-                position={Position.Left}
-                type='target'
-                id='f'
-                key={`${source} ${sourceHandle} ${target} ${targetHandle}`}
-              />
-            ),
-          });
-          updateNodeInternals(target!);
-          newEdge$.next({
-            source,
-            sourceHandle,
-            target,
-            targetHandle: "f",
+          mousePosition$.pipe(first()).subscribe(({ x, y }) => {
+            const targetID = (Math.random() + 1).toString(36).substring(7);
+            const targetCard = ReactFlowInstance.getNode(target!);
+            const { x: mapX, y: mapY } = ReactFlowInstance.project({ x, y });
+            const { x: cardX, y: cardY } = targetCard!.position;
+
+            console.log(mapX, mapY);
+            console.log(cardX, cardY);
+            const deltaX = mapX - cardX;
+            const deltaY = mapY - cardY;
+
+            let handleX = 0;
+            let handleY = 0;
+            if (deltaX < deltaY) {
+              handleX = cardX;
+              handleY = mapY;
+            } else {
+              handleX = mapX;
+              handleY = cardY;
+            }
+
+            dispatch(
+              addHandler({ id: targetCard!.id, handleX, handleY, targetID })
+            );
+            updateNodeInternals(target!);
+            newEdge$.next({
+              source,
+              sourceHandle,
+              target,
+              targetHandle: targetID,
+            });
           });
         }}
         type='source'
       />
-      {handlers.map((handler) => handler)}
+      {handler[id]?.length
+        ? handler[id].map(({ handleX, handleY, targetID }, index) => (
+            <Handle
+              // style={{
+              //   left: handleX,
+              //   top: handleY,
+              // }}
+
+              position={!(index % 2) ? Position.Left : Position.Right}
+              type='target'
+              id={targetID}
+              key={targetID}
+            />
+          ))
+        : null}
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color='text.secondary' gutterBottom>
           {data.level}

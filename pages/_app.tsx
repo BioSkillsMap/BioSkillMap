@@ -1,12 +1,15 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { ReactFlowProvider } from "react-flow-renderer";
-
+import { store } from "../store";
+import { Provider } from "react-redux";
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ReactFlowProvider>
-      <Component {...pageProps} />
-    </ReactFlowProvider>
+    <Provider store={store}>
+      <ReactFlowProvider>
+        <Component {...pageProps} />
+      </ReactFlowProvider>
+    </Provider>
   );
 }
 

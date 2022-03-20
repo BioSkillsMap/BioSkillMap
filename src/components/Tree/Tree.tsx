@@ -1,17 +1,16 @@
 import { useObservable } from "observable-hooks";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ReactFlow, {
   addEdge,
   Controls,
   Background,
   useNodesState,
   useEdgesState,
-  Connection,
   NodeTypes,
   ConnectionMode,
   Node,
 } from "react-flow-renderer";
-import { withLatestFrom } from "rxjs";
+import { Subject, withLatestFrom } from "rxjs";
 import { trigger$ } from "../Toolbar/Buttons/Add-Card/AddCard";
 import CustomCard from "../Card/Card";
 import { newEdge$ } from "../Card/Card";
@@ -25,6 +24,28 @@ const nodeTypes: NodeTypes = {
   Card: CustomCard,
 };
 
+const Cards = [
+  {
+    description: "The best HTML introduction I have ever seen",
+    id: "Web Development",
+    level: "beginner",
+    resource: "https://youtu.be/XUZFdXlr53k",
+  },
+  {
+    description: "The best CSS introduction I have ever seen",
+    id: "Web Development",
+    level: "beginner",
+    resource: "https://youtu.be/XUZFdXlr53k",
+  },
+  {
+    description: "The best JAVASCRIPT introduction I have ever seen",
+    id: "Web Development",
+    level: "beginner",
+    resource: "https://youtu.be/XUZFdXlr53k",
+  },
+] as Data[];
+
+export const mousePosition$ = new Subject<{ x: number; y: number }>();
 const OverviewFlow = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -37,10 +58,10 @@ const OverviewFlow = () => {
         y: Math.random() * 500,
       },
       data: {
-        description: "<3 Rox",
-        id: "Web Developer",
-        level: "Roxy",
-        resource: "https://youtu.be/XUZFdXlr53k",
+        description: Cards[(nodes.length - 1) % 3].description,
+        id: Cards[(nodes.length - 1) % 3].id,
+        level: Cards[(nodes.length - 1) % 3].level,
+        resource: Cards[(nodes.length - 1) % 3].resource,
       } as Data,
     } as Node<Data>;
     setNodes((nodes) => [...nodes, newNode]);
@@ -52,10 +73,8 @@ const OverviewFlow = () => {
       handleAddFile(nodes);
     });
     newEdge$.subscribe((connection) => {
-      console.log(connection);
       setEdges((currentEdges) => {
         const newEdges = addEdge(connection, currentEdges);
-        console.log(newEdges);
         return newEdges;
       });
     });
@@ -68,7 +87,7 @@ const OverviewFlow = () => {
   //   },
   //   [setEdges]
   // );
-
+  const mapRef = useRef<HTMLDivElement>(null);
   return (
     <ReactFlow
       connectionMode={"loose" as ConnectionMode}
@@ -80,9 +99,14 @@ const OverviewFlow = () => {
       }}
       // onConnect={onConnect}
       onEdgesChange={(r) => {
-        console.log(r);
-        console.log("From on edge");
         onEdgesChange(r);
+      }}
+      ref={mapRef}
+      onConnectEnd={(e) => {
+        mousePosition$.next({
+          x: e.pageX - mapRef.current?.getBoundingClientRect().x,
+          y: e.pageY - mapRef.current?.getBoundingClientRect().y,
+        });
       }}
       fitView
       nodeTypes={nodeTypes}
