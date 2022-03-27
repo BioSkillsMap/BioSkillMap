@@ -1,47 +1,39 @@
-import { useEffect, FC, useState, useRef } from "react";
-import Box from "@mui/material/Box";
+import { useEffect, FC, useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { CardTypeMap } from "@mui/material";
 import {
-  addEdge,
-  Connection,
   Handle,
-  Position,
+  Node,
   useReactFlow,
   useUpdateNodeInternals,
 } from "react-flow-renderer";
-import { insertEdges$ } from "../Toolbar/Buttons/Add-Edge/AddEdge";
+import { editingEdge$ } from "../Toolbar/Buttons/Add-Edge/AddEdge";
 import { Data } from "../Tree/data/tree";
-import { first, Subject } from "rxjs";
+import { first } from "rxjs";
 import { useAppDispatch, useAppSelector } from "../../../redux-hooks";
-import { addHandler } from "./card-slice";
+import { updateCard } from "./card-slice";
 import { mousePosition$ } from "../Tree/Tree";
+import { snapEdge, getCardMetrics } from "./snap-edge";
 
-const bull = (
-  <Box
-    component='span'
-    sx={{ display: "inline-block", mx: "2px", transform: "scale(0.8)" }}>
-    •
-  </Box>
-);
-// const handler$ = new Subject<{ id: string; handler: JSX.Element }>();
-export const newEdge$ = new Subject<Connection>();
 const CustomCard: FC<{ data: Data; id: string }> = ({ data, id }) => {
-  const ReactFlowInstance = useReactFlow();
   const [isEditing, setIsEditing] = useState(false);
-  const handler = useAppSelector(({ handler }) => handler);
+
+  const { handlers } = useAppSelector(({ card }) => card);
   const dispatch = useAppDispatch();
+
+  /**
+   * Tracking if the user is in edge-editing mode
+   */
   useEffect(() => {
-    insertEdges$.subscribe(setIsEditing);
+    editingEdge$.subscribe(setIsEditing);
   }, []);
+
+  const ReactFlowInstance = useReactFlow();
   const updateNodeInternals = useUpdateNodeInternals();
-  useEffect(() => {
-    console.log(handler);
-  }, [handler]);
+
   return (
     <Card
       sx={{ minWidth: 275 }}
@@ -52,6 +44,10 @@ const CustomCard: FC<{ data: Data; id: string }> = ({ data, id }) => {
         style={{
           position: "absolute",
           top: 0,
+
+          // If the user is in edge-editing mode, we cover the card with a transparent
+          // handler. This way they can drag edges from anywhere inside the card.
+          // If not in edge-editing, the handler should not be visible
           visibility: isEditing ? "visible" : "hidden",
           width: "100%",
           height: "100%",
@@ -62,49 +58,61 @@ const CustomCard: FC<{ data: Data; id: string }> = ({ data, id }) => {
         }}
         onConnect={({ source, sourceHandle, target, targetHandle }) => {
           mousePosition$.pipe(first()).subscribe(({ x, y }) => {
-            const targetID = (Math.random() + 1).toString(36).substring(7);
-            const targetCard = ReactFlowInstance.getNode(target!);
-            const { x: mapX, y: mapY } = ReactFlowInstance.project({ x, y });
-            const { x: cardX, y: cardY } = targetCard!.position;
-
-            console.log(mapX, mapY);
-            console.log(cardX, cardY);
-            const deltaX = mapX - cardX;
-            const deltaY = mapY - cardY;
-
-            let handleX = 0;
-            let handleY = 0;
-            if (deltaX < deltaY) {
-              handleX = cardX;
-              handleY = mapY;
-            } else {
-              handleX = mapX;
-              handleY = cardY;
-            }
-
-            dispatch(
-              addHandler({ id: targetCard!.id, handleX, handleY, targetID })
-            );
-            updateNodeInternals(target!);
-            newEdge$.next({
-              source,
-              sourceHandle,
-              target,
-              targetHandle: targetID,
+            /**
+             * The cursor position inside the canvas
+             */
+            const cursorPosition = ReactFlowInstance.project({
+              x,
+              y,
             });
+
+            const targetCard = ReactFlowInstance.getNode(target!);
+
+            /**
+             * The card's metrics necessary for placing the handler on one edge
+             */
+            const metrics = getCardMetrics(targetCard as Node);
+
+            // the x and y position for snapping the handler to the closest edge
+            const { x: handleX, y: handleY } = snapEdge(
+              metrics,
+              cursorPosition
+            );
+
+            // adding multiple edges on the same node requires a targetHandle,
+            // that connect a handler to an edge. The targetHandle should be unique
+            // and known by both the handler and the edge.
+            const targetID = (Math.random() + 1).toString(36).substring(7);
+
+            // update the node's handlers and connections
+            dispatch(
+              updateCard({
+                id: targetCard!.id,
+                handleX,
+                handleY,
+                targetID,
+                connection: {
+                  source,
+                  sourceHandle,
+                  target,
+                  targetHandle: targetID,
+                },
+              })
+            );
+
+            // alert the node about the new handlers
+            updateNodeInternals(target!);
           });
         }}
         type='source'
       />
-      {handler[id]?.length
-        ? handler[id].map(({ handleX, handleY, targetID }, index) => (
+      {handlers[id]?.length
+        ? handlers[id].map(({ handleX, handleY, targetID }) => (
             <Handle
-              // style={{
-              //   left: handleX,
-              //   top: handleY,
-              // }}
-
-              position={!(index % 2) ? Position.Left : Position.Right}
+              style={{
+                left: handleX,
+                top: handleY,
+              }}
               type='target'
               id={targetID}
               key={targetID}
