@@ -14,6 +14,13 @@ interface CardInternals {
   connection: Connection;
 }
 
+interface Card {
+  id: string;
+  targetID: string;
+  handlerX: number;
+  handlerY: number;
+}
+
 export const CardSlice = createSlice({
   name: "counter",
   initialState: {
@@ -24,10 +31,7 @@ export const CardSlice = createSlice({
     updateCard(
       state,
       action: PayloadAction<{
-        id: string;
-        targetID: string;
-        handleX: number;
-        handleY: number;
+        card: Card;
         connection: Connection;
       }>
     ) {
@@ -35,12 +39,13 @@ export const CardSlice = createSlice({
         ...state,
         connection: action.payload.connection,
         handlers: {
-          [action.payload.id]: [
-            ...(state.handlers[action.payload.id] || []),
+          ...state.handlers,
+          [action.payload.card.id]: [
+            ...(state.handlers[action.payload.card.id] || []),
             {
-              handleX: action.payload.handleX,
-              handleY: action.payload.handleY,
-              targetID: action.payload.targetID,
+              handleX: action.payload.card.handlerX,
+              handleY: action.payload.card.handlerY,
+              targetID: action.payload.card.targetID,
             },
           ],
         },

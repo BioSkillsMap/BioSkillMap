@@ -12,7 +12,7 @@ import ReactFlow, {
 } from "react-flow-renderer";
 import { Subject, withLatestFrom } from "rxjs";
 import { trigger$ } from "../Toolbar/Buttons/Add-Card/AddCard";
-import CustomCard from "../Card/Card";
+import CustomCard, { connection$ } from "../Card/Card";
 import {
   nodes as initialNodes,
   edges as initialEdges,
@@ -51,9 +51,10 @@ const OverviewFlow = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const { connection } = useAppSelector(({ card }) => card);
-
   useEffect(() => {
-    setEdges((edges) => addEdge(connection, edges));
+    setEdges((edges) => {
+      return addEdge(connection, edges);
+    });
   }, [connection, setEdges]);
 
   const handleAddFile = (nodes: Node<Data>[]) => {
@@ -88,7 +89,6 @@ const OverviewFlow = () => {
       nodes={nodes}
       edges={edges}
       onNodesChange={(nodeChanges) => {
-        console.log(nodeChanges);
         onNodesChange(nodeChanges);
       }}
       // onConnect={onConnect}

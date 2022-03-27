@@ -55,14 +55,8 @@ const snapCoordinates = (
   systemOrigin: System,
   cardMetrics: CardMetrics
 ) => {
-  console.log("mouse position", cursorPosition.x, cursorPosition.y);
-  console.log("system", systemOrigin);
-
   const deltaX = Math.abs(cursorPosition.x - systemOrigin.x);
   const deltaY = Math.abs(cursorPosition.y - systemOrigin.y);
-
-  console.log("deltaX", deltaX);
-  console.log("deltaY", deltaY);
 
   if (deltaX < deltaY) {
     return {

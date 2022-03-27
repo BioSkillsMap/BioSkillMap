@@ -5,6 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import {
+  Connection,
   Handle,
   Node,
   useReactFlow,
@@ -12,12 +13,13 @@ import {
 } from "react-flow-renderer";
 import { editingEdge$ } from "../Toolbar/Buttons/Add-Edge/AddEdge";
 import { Data } from "../Tree/data/tree";
-import { first } from "rxjs";
+import { first, Subject } from "rxjs";
 import { useAppDispatch, useAppSelector } from "../../../redux-hooks";
 import { updateCard } from "./card-slice";
 import { mousePosition$ } from "../Tree/Tree";
 import { snapEdge, getCardMetrics } from "./snap-edge";
 
+export const connection$ = new Subject<Connection>();
 const CustomCard: FC<{ data: Data; id: string }> = ({ data, id }) => {
   const [isEditing, setIsEditing] = useState(false);
 
@@ -74,7 +76,7 @@ const CustomCard: FC<{ data: Data; id: string }> = ({ data, id }) => {
             const metrics = getCardMetrics(targetCard as Node);
 
             // the x and y position for snapping the handler to the closest edge
-            const { x: handleX, y: handleY } = snapEdge(
+            const { x: handlerX, y: handlerY } = snapEdge(
               metrics,
               cursorPosition
             );
@@ -87,10 +89,12 @@ const CustomCard: FC<{ data: Data; id: string }> = ({ data, id }) => {
             // update the node's handlers and connections
             dispatch(
               updateCard({
-                id: targetCard!.id,
-                handleX,
-                handleY,
-                targetID,
+                card: {
+                  handlerX,
+                  handlerY,
+                  id: targetCard!.id,
+                  targetID,
+                },
                 connection: {
                   source,
                   sourceHandle,
