@@ -3,7 +3,7 @@ import { BsPlusLg } from "react-icons/bs";
 import IconButton from "@mui/material/IconButton";
 import add_button__styles from "./add-card.module.css";
 import { Subject } from "rxjs";
-import { insertEdges$ } from "../Add-Edge/AddEdge";
+import { editingEdge$ } from "../Add-Edge/AddEdge";
 
 export const trigger$ = new Subject<boolean>();
 const Add = () => {
@@ -12,7 +12,7 @@ const Add = () => {
       className={add_button__styles.icon}
       size='large'
       onClick={() => {
-        insertEdges$.next(false);
+        editingEdge$.next(false);
         trigger$.next(true);
       }}>
       <BsPlusLg />

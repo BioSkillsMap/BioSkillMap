@@ -1,5 +1,5 @@
 import { useObservable } from "observable-hooks";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import ReactFlow, {
   addEdge,
   Controls,
@@ -13,12 +13,12 @@ import ReactFlow, {
 import { Subject, withLatestFrom } from "rxjs";
 import { trigger$ } from "../Toolbar/Buttons/Add-Card/AddCard";
 import CustomCard from "../Card/Card";
-import { newEdge$ } from "../Card/Card";
 import {
   nodes as initialNodes,
   edges as initialEdges,
   Data,
 } from "./data/tree";
+import { useAppSelector } from "../../../redux-hooks";
 
 const nodeTypes: NodeTypes = {
   Card: CustomCard,
@@ -49,6 +49,13 @@ export const mousePosition$ = new Subject<{ x: number; y: number }>();
 const OverviewFlow = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  const { connection } = useAppSelector(({ card }) => card);
+
+  useEffect(() => {
+    setEdges((edges) => addEdge(connection, edges));
+  }, [connection, setEdges]);
+
   const handleAddFile = (nodes: Node<Data>[]) => {
     const newNode = {
       id: `${nodes.length + 1}`,
@@ -72,21 +79,8 @@ const OverviewFlow = () => {
     trigger$.pipe(withLatestFrom(nodes$)).subscribe(([_, [nodes]]) => {
       handleAddFile(nodes);
     });
-    newEdge$.subscribe((connection) => {
-      setEdges((currentEdges) => {
-        const newEdges = addEdge(connection, currentEdges);
-        return newEdges;
-      });
-    });
   }, []);
 
-  // const onConnect = useCallback(
-  //   (connection) => {
-  //     console.log(connection);
-  //     return setEdges((eds) => addEdge(connection, eds));
-  //   },
-  //   [setEdges]
-  // );
   const mapRef = useRef<HTMLDivElement>(null);
   return (
     <ReactFlow

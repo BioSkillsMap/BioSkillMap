@@ -4,11 +4,11 @@ import { IoAnalyticsOutline } from "react-icons/io5";
 import { BehaviorSubject, Subject } from "rxjs";
 import { useEffect, useState } from "react";
 
-export const insertEdges$ = new BehaviorSubject<boolean>(false);
+export const editingEdge$ = new BehaviorSubject<boolean>(false);
 const AddEdge = () => {
   const [isEditing, setIsEditing] = useState(false);
   useEffect(() => {
-    insertEdges$.subscribe(setIsEditing);
+    editingEdge$.subscribe(setIsEditing);
   }, []);
   return (
     <IconButton
@@ -20,7 +20,7 @@ const AddEdge = () => {
       }}
       size='large'
       onClick={() => {
-        insertEdges$.next(!isEditing);
+        editingEdge$.next(!isEditing);
         setIsEditing(!isEditing);
       }}>
       <IoAnalyticsOutline />
