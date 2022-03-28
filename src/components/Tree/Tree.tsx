@@ -12,7 +12,7 @@ import ReactFlow, {
 } from "react-flow-renderer";
 import { Subject, withLatestFrom } from "rxjs";
 import { trigger$ } from "../Toolbar/Buttons/Add-Card/AddCard";
-import CustomCard, { connection$ } from "../Card/Card";
+import CustomCard from "../Card/Card";
 import {
   nodes as initialNodes,
   edges as initialEdges,

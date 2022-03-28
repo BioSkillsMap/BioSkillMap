@@ -19,7 +19,6 @@ import { updateCard } from "./card-slice";
 import { mousePosition$ } from "../Tree/Tree";
 import { snapEdge, getCardMetrics } from "./snap-edge";
 
-export const connection$ = new Subject<Connection>();
 const CustomCard: FC<{ data: Data; id: string }> = ({ data, id }) => {
   const [isEditing, setIsEditing] = useState(false);
 
