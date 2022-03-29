@@ -1,7 +1,7 @@
 import { NextPageContext } from "next";
 import dynamic from "next/dynamic";
 import React, { FC } from "react";
-import { Edge, Node, ReactFlowProvider } from "react-flow-renderer";
+import { Edge, Node } from "react-flow-renderer";
 import { prisma } from "../../prisma/prisma";
 import Toolbar from "../../src/components/Toolbar/Toolbar";
 import styles from "../../styles/Home.module.css";
@@ -12,9 +12,7 @@ const Maps: FC<{ edges: Edge[]; nodes: Node[] }> = ({ nodes, edges }) => {
   return (
     <div className={styles.container}>
       <Toolbar></Toolbar>
-      <ReactFlowProvider>
-        <Tree gEdges={edges} gNodes={nodes}></Tree>
-      </ReactFlowProvider>
+      <Tree gEdges={edges} gNodes={nodes}></Tree>
       <div className={styles.roadmap__container}></div>
     </div>
   );

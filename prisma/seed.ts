@@ -1,15 +1,13 @@
 import { prisma } from "./prisma";
 import { Edge, Node } from "react-flow-renderer";
-import type { Data } from "../src/components/Tree/Tree";
+import type { Data } from "../utils/create-card";
 
 const nodes: Node[] = [
   {
     id: "1",
     type: "Card",
     data: {
-      id: "Web Development",
-      CardId: "1",
-      resource: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      title: "Web Development",
       level: "beginner",
       description:
         "Web Development is very much about learning new things, and we want to provide everything you need to kickstart your journey",
