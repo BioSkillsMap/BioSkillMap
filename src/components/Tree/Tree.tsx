@@ -1,5 +1,5 @@
 import { useObservable } from "observable-hooks";
-import { useCallback, useEffect, useRef } from "react";
+import { FC, useCallback, useEffect, useRef } from "react";
 import ReactFlow, {
   addEdge,
   Controls,
@@ -9,20 +9,28 @@ import ReactFlow, {
   NodeTypes,
   ConnectionMode,
   Node,
+  ReactFlowProvider,
+  useReactFlow,
+  Edge,
 } from "react-flow-renderer";
 import { Subject, withLatestFrom } from "rxjs";
 import { trigger$ } from "../Toolbar/Buttons/Add-Card/AddCard";
 import CustomCard from "../Card/Card";
-import {
-  nodes as initialNodes,
-  edges as initialEdges,
-  Data,
-} from "./data/tree";
 import { useAppSelector } from "../../../redux-hooks";
+import { useLevelUpdatedNodesState } from "../../../hooks/useLevelUpdatedNodesState";
+import { useLevelUpdatedEdgesState } from "../../../hooks/useLevelUpdatedEdgesState";
 
 const nodeTypes: NodeTypes = {
   Card: CustomCard,
 };
+
+export interface Data {
+  id: string;
+  CardId: string;
+  resource: string;
+  level: "beginner" | "intermediate" | "advanced" | "Roxy";
+  description: string;
+}
 
 const Cards = [
   {
@@ -46,9 +54,12 @@ const Cards = [
 ] as Data[];
 
 export const mousePosition$ = new Subject<{ x: number; y: number }>();
-const OverviewFlow = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+const OverviewFlow: FC<{ gNodes: Node[]; gEdges: Edge[] }> = ({
+  gNodes,
+  gEdges,
+}) => {
+  const [nodes, setNodes, onNodesChange] = useLevelUpdatedNodesState(gNodes);
+  const [edges, setEdges, onEdgesChange] = useLevelUpdatedEdgesState(gEdges);
 
   const { connection } = useAppSelector(({ card }) => card);
   useEffect(() => {
@@ -66,13 +77,16 @@ const OverviewFlow = () => {
         y: Math.random() * 500,
       },
       data: {
-        description: Cards[(nodes.length - 1) % 3].description,
-        id: Cards[(nodes.length - 1) % 3].id,
-        level: Cards[(nodes.length - 1) % 3].level,
-        resource: Cards[(nodes.length - 1) % 3].resource,
+        description: Cards[nodes.length % 3].description,
+        id: Cards[nodes.length % 3].id,
+        level: Cards[nodes.length % 3].level,
+        resource: Cards[nodes.length % 3].resource,
       } as Data,
     } as Node<Data>;
-    setNodes((nodes) => [...nodes, newNode]);
+    setNodes((nodes) => {
+      console.log([...nodes, newNode]);
+      return [...nodes, newNode];
+    });
   };
 
   const nodes$ = useObservable((nodes$) => nodes$, [nodes]);
