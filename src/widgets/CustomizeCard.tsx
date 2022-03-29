@@ -11,23 +11,15 @@ import {
 } from "@mui/material";
 import { BehaviorSubject, Subject } from "rxjs";
 import { useObservableState } from "observable-hooks";
-import { useState } from "react";
-import {
-  Node,
-  useNodes,
-  useStore,
-  useUpdateNodeInternals,
-} from "react-flow-renderer";
+import { FC, useState } from "react";
+import { Node } from "react-flow-renderer";
 import { createCard } from "../../utils/create-card";
 export const openModal$ = new BehaviorSubject<boolean>(true);
 export const Nodes$ = new Subject<Node>();
 const CustomizeCard = () => {
   const open = useObservableState(openModal$);
-  const store = useStore();
-  const nodes = useNodes();
-  const updateNodeInternals = useUpdateNodeInternals();
   const close = () => openModal$.next(false);
-  const [level, setLevel] = useState("beginner");
+  const [difficulty, setDifficulty] = useState("beginner");
   const [title, setTitle] = useState("");
   return (
     <Modal
@@ -72,9 +64,9 @@ const CustomizeCard = () => {
           <Select
             labelId='demo-simple-select-label'
             id='demo-simple-select'
-            value={level}
+            value={difficulty}
             label='Difficulty'
-            onChange={(ch) => setLevel(ch.target.value)}>
+            onChange={(ch) => setDifficulty(ch.target.value)}>
             <MenuItem value='beginner'>Beginner</MenuItem>
             <MenuItem value='intermediate'>Intermediate</MenuItem>
             <MenuItem value='advanced'>Advanced </MenuItem>
@@ -87,7 +79,7 @@ const CustomizeCard = () => {
           }}
           variant='outlined'
           onClick={() => {
-            Nodes$.next(createCard(title, level));
+            Nodes$.next(createCard(title, difficulty));
           }}>
           SAVE
         </Button>

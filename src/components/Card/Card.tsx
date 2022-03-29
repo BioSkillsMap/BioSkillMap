@@ -6,11 +6,11 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Handlers from "./Handler/Handler";
 import { useReactFlow } from "react-flow-renderer";
-import { useAppDispatch } from "../../../redux-hooks";
 import Link from "next/link";
 import type { Data } from "../../../utils/create-card";
 
 const CustomCard: FC<{ data: Data; id: string }> = ({ data, id }) => {
+  const ReactFlowInstance = useReactFlow();
   return (
     <Card
       sx={{ minWidth: 275 }}
@@ -20,7 +20,7 @@ const CustomCard: FC<{ data: Data; id: string }> = ({ data, id }) => {
       <Handlers id={id} />
       <CardContent>
         <Typography sx={{ fontSize: 14 }} color='text.secondary' gutterBottom>
-          {data.level}
+          {data.difficulty}
         </Typography>
         <Typography variant='h5' component='div'>
           {data.title}

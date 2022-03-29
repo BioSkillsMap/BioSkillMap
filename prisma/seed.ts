@@ -4,11 +4,10 @@ import type { Data } from "../utils/create-card";
 
 const nodes: Node[] = [
   {
-    id: "1",
+    id: "web-development",
     type: "Card",
     data: {
-      title: "Web Development",
-      level: "beginner",
+      difficulty: "beginner",
       description:
         "Web Development is very much about learning new things, and we want to provide everything you need to kickstart your journey",
     } as Data,
@@ -19,18 +18,13 @@ const nodes: Node[] = [
 const edges: Edge[] = [];
 
 export default async function seed() {
-  // await prisma.graph.deleteMany({});
+  await prisma.graph.deleteMany({});
   const graph = await prisma.graph.createMany({
     data: [
       {
-        level: "first-level",
+        level: "web-development",
         edges: JSON.stringify(edges),
         nodes: JSON.stringify(nodes),
-      },
-      {
-        level: "1",
-        edges: JSON.stringify([]),
-        nodes: JSON.stringify([]),
       },
     ],
   });

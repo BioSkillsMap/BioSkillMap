@@ -11,7 +11,6 @@ import { mousePosition$ } from "../../Tree/Tree";
 import { first } from "rxjs";
 import { getCardMetrics, snapEdge } from "./snap-edge";
 import { updateCard } from "../card-slice";
-import { NodeNextRequest } from "next/dist/server/base-http/node";
 
 const Handlers: FC<{ id: string }> = ({ id }) => {
   const [isEditing, setIsEditing] = useState(false);

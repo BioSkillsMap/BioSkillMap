@@ -1,12 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../prisma/prisma";
-export const updateGraphOnLevel = async (
+const updateGraphOnLevel = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
   const { level } = req.query as { level: string };
-  const { edges, nodes } = req.body;
-  prisma.graph.upsert({
+  const { edges, nodes } = JSON.parse(req.body);
+  console.log(edges, nodes);
+  await prisma.graph.upsert({
     where: {
       level,
     },
@@ -21,3 +22,5 @@ export const updateGraphOnLevel = async (
     },
   });
 };
+
+export default updateGraphOnLevel;

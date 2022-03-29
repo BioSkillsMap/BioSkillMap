@@ -1,20 +1,21 @@
 import { Node } from "react-flow-renderer";
+import { normalizeCardID } from "./slugify";
 
 export interface Data {
   title: string;
-  level: "beginner" | "intermediate" | "advanced" | "Roxy";
+  difficulty: "beginner" | "intermediate" | "advanced" | "Roxy";
   description: string;
 }
 
-export const createCard = (title: string, level: string) => {
+export const createCard = (title: string, difficulty: string) => {
   return {
-    id: title,
+    id: normalizeCardID(title),
     type: "Card",
     data: {
       title,
-      level,
+      difficulty,
       description:
-        "Web Development is very much about learning new things, and we want to provide everything you need to kickstart your journey",
+        "Web Development is very much about learning new things, and we want to provide everything you need to kickstart your journey" as string,
     } as Data,
     position: {
       x: 0,
