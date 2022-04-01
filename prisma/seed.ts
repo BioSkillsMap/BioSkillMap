@@ -25,6 +25,7 @@ export default async function seed() {
         level: "web-development",
         edges: JSON.stringify(edges),
         nodes: JSON.stringify(nodes),
+        handlers: JSON.stringify({}),
       },
     ],
   });

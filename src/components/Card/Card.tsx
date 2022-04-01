@@ -1,16 +1,15 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Handlers from "./Handler/Handler";
-import { useReactFlow } from "react-flow-renderer";
+import { useReactFlow, useUpdateNodeInternals } from "react-flow-renderer";
 import Link from "next/link";
 import type { Data } from "../../../utils/create-card";
 
 const CustomCard: FC<{ data: Data; id: string }> = ({ data, id }) => {
-  const ReactFlowInstance = useReactFlow();
   return (
     <Card
       sx={{ minWidth: 275 }}

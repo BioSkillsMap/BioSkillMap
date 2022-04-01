@@ -11,4 +11,5 @@ model Graph {
   level String @id @unique
   edges String 
   nodes String 
+  handlers String
 }

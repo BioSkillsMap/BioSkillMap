@@ -5,8 +5,7 @@ const updateGraphOnLevel = async (
   res: NextApiResponse
 ) => {
   const { level } = req.query as { level: string };
-  const { edges, nodes } = JSON.parse(req.body);
-  console.log(edges, nodes);
+  const { edges, nodes, handlers } = JSON.parse(req.body);
   await prisma.graph.upsert({
     where: {
       level,
@@ -15,10 +14,12 @@ const updateGraphOnLevel = async (
       level,
       edges,
       nodes,
+      handlers,
     },
     update: {
       edges,
       nodes,
+      handlers,
     },
   });
 };

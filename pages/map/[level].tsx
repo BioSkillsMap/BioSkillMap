@@ -1,8 +1,13 @@
 import { NextPageContext } from "next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, { FC } from "react";
-import { Edge, Node, useReactFlow } from "react-flow-renderer";
+import React, { FC, useEffect } from "react";
+import {
+  Edge,
+  Node,
+  useReactFlow,
+  useUpdateNodeInternals,
+} from "react-flow-renderer";
 import { prisma } from "../../prisma/prisma";
 import Toolbar from "../../src/components/Toolbar/Toolbar";
 import styles from "../../styles/Home.module.css";
@@ -12,10 +17,27 @@ const Tree = dynamic(() => import("../../src/components/Tree/Tree"), {
 import CustomizeCard from "../../src/widgets/CustomizeCard";
 import { Fab } from "@mui/material";
 import { AiOutlineUpload } from "react-icons/ai";
+import { useAppDispatch, useAppSelector } from "../../redux-hooks";
+import {
+  HandlerStack,
+  rebuildHandlers,
+} from "../../src/components/Card/card-slice";
+import { createCard } from "../../utils/create-card";
 
-const Maps: FC<{ edges: Edge[]; nodes: Node[] }> = ({ nodes, edges }) => {
+const Maps: FC<{ edges: Edge[]; nodes: Node[]; handlers: HandlerStack }> = ({
+  nodes,
+  edges,
+  handlers,
+}) => {
   const router = useRouter();
   const ReactFlowInstance = useReactFlow();
+  const { card } = useAppSelector((ev) => ev);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(rebuildHandlers(handlers));
+  }, []);
+
   return (
     <div className={styles.container}>
       <Toolbar></Toolbar>
@@ -39,6 +61,7 @@ const Maps: FC<{ edges: Edge[]; nodes: Node[] }> = ({ nodes, edges }) => {
             body: JSON.stringify({
               nodes: JSON.stringify(ReactFlowInstance.getNodes()),
               edges: JSON.stringify(ReactFlowInstance.getEdges()),
+              handlers: JSON.stringify(card.handlers),
             }),
           });
         }}>
@@ -58,10 +81,12 @@ export const getServerSideProps = async (context: NextPageContext) => {
   });
   const nodes = JSON.parse(graph?.nodes || ("[]" as string));
   const edges = JSON.parse(graph?.edges || ("[]" as string));
+  const handlers = JSON.parse(graph?.handlers || ("{}" as string));
   return {
     props: {
       edges,
       nodes,
+      handlers,
     },
   };
 };

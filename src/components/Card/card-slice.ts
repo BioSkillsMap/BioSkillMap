@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Connection } from "react-flow-renderer";
 
-interface HandlerStack {
+export interface HandlerStack {
   [id: string]: {
     handleX: number;
     handleY: number;
@@ -28,6 +28,13 @@ export const CardSlice = createSlice({
     connection: {} as Connection,
   } as CardInternals,
   reducers: {
+    rebuildHandlers(_, action: PayloadAction<HandlerStack>) {
+      // console.log(action.payload);
+      return {
+        handlers: action.payload,
+        connection: {} as Connection,
+      };
+    },
     updateCard(
       state,
       action: PayloadAction<{
@@ -35,7 +42,7 @@ export const CardSlice = createSlice({
         connection: Connection;
       }>
     ) {
-      return {
+      const newState = {
         ...state,
         connection: action.payload.connection,
         handlers: {
@@ -50,11 +57,14 @@ export const CardSlice = createSlice({
           ],
         },
       };
+
+      // console.log(newState);
+      return newState;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { updateCard } = CardSlice.actions;
+export const { updateCard, rebuildHandlers } = CardSlice.actions;
 
 export default CardSlice.reducer;

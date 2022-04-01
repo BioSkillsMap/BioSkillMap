@@ -43,6 +43,11 @@ const OverviewFlow: FC<{ gNodes: Node[]; gEdges: Edge[] }> = ({
         })
       : null;
   }, [newNode]);
+
+  // useEffect(() => {
+  //   console.log(...nodes);
+  // }, [nodes]);
+
   const mapRef = useRef<HTMLDivElement>(null);
   return (
     <ReactFlow
@@ -50,7 +55,6 @@ const OverviewFlow: FC<{ gNodes: Node[]; gEdges: Edge[] }> = ({
       nodes={nodes}
       edges={edges}
       onNodesChange={(nodeChanges) => {
-        console.log(nodeChanges);
         onNodesChange(nodeChanges);
       }}
       // onConnect={onConnect}
