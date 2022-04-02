@@ -7,6 +7,7 @@ import ReactFlow, {
   ConnectionMode,
   Node,
   Edge,
+  useReactFlow,
 } from "react-flow-renderer";
 import { Subject } from "rxjs";
 import CustomCard from "../Card/Card";
@@ -27,15 +28,23 @@ const OverviewFlow: FC<{ gNodes: Node[]; gEdges: Edge[] }> = ({
 }) => {
   const [nodes, setNodes, onNodesChange] = useLevelUpdatedNodesState(gNodes);
   const [edges, setEdges, onEdgesChange] = useLevelUpdatedEdgesState(gEdges);
-
+  const ReactFlowInstance = useReactFlow();
   const { connection } = useAppSelector(({ card }) => card);
   useEffect(() => {
     setEdges((edges) => {
       return addEdge(connection, edges);
     });
   }, [connection, setEdges]);
-  const newNode = useObservableState(Nodes$);
 
+  useEffect(() => {
+    console.log(
+      "nodes changed! from internal state:",
+      ReactFlowInstance.getNodes()
+    );
+    // setNodes(ReactFlowInstance.getNodes());
+  }, [ReactFlowInstance.getNodes()]);
+
+  const newNode = useObservableState(Nodes$);
   useEffect(() => {
     newNode
       ? setNodes((nodes) => {
@@ -44,10 +53,6 @@ const OverviewFlow: FC<{ gNodes: Node[]; gEdges: Edge[] }> = ({
       : null;
   }, [newNode]);
 
-  // useEffect(() => {
-  //   console.log(...nodes);
-  // }, [nodes]);
-
   const mapRef = useRef<HTMLDivElement>(null);
   return (
     <ReactFlow
@@ -55,10 +60,15 @@ const OverviewFlow: FC<{ gNodes: Node[]; gEdges: Edge[] }> = ({
       nodes={nodes}
       edges={edges}
       onNodesChange={(nodeChanges) => {
+        nodeChanges.map((change) => change.type);
+        console.log("what on change sees: ", ReactFlowInstance.getNodes());
+        console.log("so what actually changes is:", nodeChanges);
+        // setNodes(ReactFlowInstance.getNodes());
         onNodesChange(nodeChanges);
       }}
       // onConnect={onConnect}
       onEdgesChange={(r) => {
+        console.log("changes edges:", r);
         onEdgesChange(r);
       }}
       ref={mapRef}

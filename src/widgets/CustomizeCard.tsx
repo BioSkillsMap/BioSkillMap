@@ -13,13 +13,13 @@ import { BehaviorSubject, Subject } from "rxjs";
 import { useObservableState } from "observable-hooks";
 import { FC, useState } from "react";
 import { Node } from "react-flow-renderer";
-import { createCard } from "../../utils/create-card";
+import { createCard, Difficulties } from "../../utils/card-helpers";
 export const openModal$ = new BehaviorSubject<boolean>(true);
 export const Nodes$ = new Subject<Node>();
 const CustomizeCard = () => {
   const open = useObservableState(openModal$);
   const close = () => openModal$.next(false);
-  const [difficulty, setDifficulty] = useState("beginner");
+  const [difficulty, setDifficulty] = useState<Difficulties>("beginner");
   const [title, setTitle] = useState("");
   return (
     <Modal
@@ -66,7 +66,7 @@ const CustomizeCard = () => {
             id='demo-simple-select'
             value={difficulty}
             label='Difficulty'
-            onChange={(ch) => setDifficulty(ch.target.value)}>
+            onChange={(ch) => setDifficulty(ch.target.value as Difficulties)}>
             <MenuItem value='beginner'>Beginner</MenuItem>
             <MenuItem value='intermediate'>Intermediate</MenuItem>
             <MenuItem value='advanced'>Advanced </MenuItem>
@@ -79,7 +79,14 @@ const CustomizeCard = () => {
           }}
           variant='outlined'
           onClick={() => {
-            Nodes$.next(createCard(title, difficulty));
+            Nodes$.next(
+              createCard({
+                title,
+                difficulty,
+                description:
+                  "Web development can be a hard but beautiful journey",
+              })
+            );
           }}>
           SAVE
         </Button>

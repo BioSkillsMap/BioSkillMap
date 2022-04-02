@@ -1,12 +1,13 @@
 import { prisma } from "./prisma";
 import { Edge, Node } from "react-flow-renderer";
-import type { Data } from "../utils/create-card";
+import type { Data } from "../utils/card-helpers";
 
 const nodes: Node[] = [
   {
-    id: "web-development",
+    id: "web",
     type: "Card",
     data: {
+      title: "WEB",
       difficulty: "beginner",
       description:
         "Web Development is very much about learning new things, and we want to provide everything you need to kickstart your journey",
@@ -22,7 +23,7 @@ export default async function seed() {
   const graph = await prisma.graph.createMany({
     data: [
       {
-        level: "web-development",
+        level: "web",
         edges: JSON.stringify(edges),
         nodes: JSON.stringify(nodes),
         handlers: JSON.stringify({}),

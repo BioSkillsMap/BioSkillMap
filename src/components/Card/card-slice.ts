@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Connection } from "react-flow-renderer";
+import { Connection, useReactFlow } from "react-flow-renderer";
 
 export interface HandlerStack {
   [id: string]: {
@@ -29,7 +29,7 @@ export const CardSlice = createSlice({
   } as CardInternals,
   reducers: {
     rebuildHandlers(_, action: PayloadAction<HandlerStack>) {
-      // console.log(action.payload);
+      console.log(action.payload);
       return {
         handlers: action.payload,
         connection: {} as Connection,
@@ -42,6 +42,7 @@ export const CardSlice = createSlice({
         connection: Connection;
       }>
     ) {
+      console.log(action.payload);
       const newState = {
         ...state,
         connection: action.payload.connection,

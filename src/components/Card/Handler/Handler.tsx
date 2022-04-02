@@ -4,6 +4,7 @@ import {
   useReactFlow,
   useUpdateNodeInternals,
   Node,
+  useStore,
 } from "react-flow-renderer";
 import { useAppDispatch, useAppSelector } from "../../../../redux-hooks";
 import { editingEdge$ } from "../../Toolbar/Buttons/Add-Edge/AddEdge";
@@ -17,7 +18,8 @@ const Handlers: FC<{ id: string }> = ({ id }) => {
 
   const { handlers } = useAppSelector(({ card }) => card);
   const dispatch = useAppDispatch();
-
+  const updateNodeInternals = useUpdateNodeInternals();
+  const ReactFlowInstance = useReactFlow();
   /**
    * Tracking if the user is in edge-editing mode
    */
@@ -25,8 +27,6 @@ const Handlers: FC<{ id: string }> = ({ id }) => {
     editingEdge$.subscribe(setIsEditing);
   }, []);
 
-  const ReactFlowInstance = useReactFlow();
-  const updateNodeInternals = useUpdateNodeInternals();
   return (
     <>
       <Handle
@@ -44,6 +44,7 @@ const Handlers: FC<{ id: string }> = ({ id }) => {
           // If not in edge-editing, the handler should not be visible
           visibility: isEditing ? "visible" : "hidden",
         }}
+        id={id}
         onConnect={({ source, sourceHandle, target, targetHandle }) => {
           mousePosition$.pipe(first()).subscribe(({ x, y }) => {
             /**
@@ -88,8 +89,6 @@ const Handlers: FC<{ id: string }> = ({ id }) => {
                 },
               })
             );
-
-            // alert the node about the new handlers
             updateNodeInternals(target!);
           });
         }}

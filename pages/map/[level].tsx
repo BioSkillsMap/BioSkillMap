@@ -22,7 +22,6 @@ import {
   HandlerStack,
   rebuildHandlers,
 } from "../../src/components/Card/card-slice";
-import { createCard } from "../../utils/create-card";
 
 const Maps: FC<{ edges: Edge[]; nodes: Node[]; handlers: HandlerStack }> = ({
   nodes,
@@ -36,6 +35,7 @@ const Maps: FC<{ edges: Edge[]; nodes: Node[]; handlers: HandlerStack }> = ({
 
   useEffect(() => {
     dispatch(rebuildHandlers(handlers));
+    console.log("from rebuilt handlers:", ReactFlowInstance.getNodes());
   }, []);
 
   return (
@@ -55,13 +55,15 @@ const Maps: FC<{ edges: Edge[]; nodes: Node[]; handlers: HandlerStack }> = ({
           console.log((router.query.level as string) || "web-development", {
             nodes: ReactFlowInstance.getNodes(),
             edges: ReactFlowInstance.getEdges(),
+            handlers: card.handlers,
           });
+
           fetch(`/api/${(router.query.level as string) || "web-development"}`, {
             method: "POST",
             body: JSON.stringify({
-              nodes: JSON.stringify(ReactFlowInstance.getNodes()),
-              edges: JSON.stringify(ReactFlowInstance.getEdges()),
-              handlers: JSON.stringify(card.handlers),
+              nodes: JSON.stringify([ReactFlowInstance.getNodes()[0]]),
+              edges: JSON.stringify([] as Edge[]),
+              handlers: JSON.stringify({}),
             }),
           });
         }}>
