@@ -2,7 +2,7 @@ import { NextPageContext } from "next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { FC, useEffect } from "react";
-import {
+import ReactFlow, {
   Edge,
   Node,
   useReactFlow,
@@ -58,12 +58,14 @@ const Maps: FC<{ edges: Edge[]; nodes: Node[]; handlers: HandlerStack }> = ({
             handlers: card.handlers,
           });
 
+          // the changes are made on the applyUpdates function inside the react-flow-renderer module.
+          // applyUpdates was not picking up on the handlers, only the dimensions.
           fetch(`/api/${(router.query.level as string) || "web-development"}`, {
             method: "POST",
             body: JSON.stringify({
-              nodes: JSON.stringify([ReactFlowInstance.getNodes()[0]]),
-              edges: JSON.stringify([] as Edge[]),
-              handlers: JSON.stringify({}),
+              nodes: JSON.stringify(ReactFlowInstance.getNodes()),
+              edges: JSON.stringify(ReactFlowInstance.getEdges()),
+              handlers: JSON.stringify(card.handlers),
             }),
           });
         }}>
