@@ -45,6 +45,7 @@ const Handlers: FC<{ id: string }> = ({ id }) => {
         }}
         id={id}
         onConnect={({ source, sourceHandle, target, targetHandle }) => {
+          if (source === target) return;
           handlersPosition.subscribe(
             ({ sourceHandlerPosition, targetHandlerPosition }) => {
               console.log(sourceHandlerPosition, targetHandlerPosition);

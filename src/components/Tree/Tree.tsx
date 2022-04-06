@@ -7,12 +7,8 @@ import ReactFlow, {
   ConnectionMode,
   Node,
   Edge,
-  useReactFlow,
-  EdgeTypes,
   ConnectionLineType,
-  SmoothStepEdge,
 } from "react-flow-renderer";
-import { Subject } from "rxjs";
 import CustomCard from "../Card/Card";
 import { useAppSelector } from "../../../redux-hooks";
 import { useLevelUpdatedNodesState } from "../../../hooks/useLevelUpdatedNodesState";
@@ -81,7 +77,6 @@ const OverviewFlow: FC<{ gNodes: Node[]; gEdges: Edge[] }> = ({
       }}
       fitView
       nodeTypes={nodeTypes}
-      // edgeTypes={edgeTypes}
       connectionLineType={ConnectionLineType.SmoothStep}
       attributionPosition='top-right'>
       <Controls />
