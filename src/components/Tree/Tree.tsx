@@ -8,6 +8,9 @@ import ReactFlow, {
   Node,
   Edge,
   useReactFlow,
+  EdgeTypes,
+  ConnectionLineType,
+  SmoothStepEdge,
 } from "react-flow-renderer";
 import { Subject } from "rxjs";
 import CustomCard from "../Card/Card";
@@ -16,33 +19,34 @@ import { useLevelUpdatedNodesState } from "../../../hooks/useLevelUpdatedNodesSt
 import { useLevelUpdatedEdgesState } from "../../../hooks/useLevelUpdatedEdgesState";
 import { useObservableState } from "observable-hooks";
 import { Nodes$ } from "../../widgets/CustomizeCard";
+import {
+  sourceHandlerPosition$,
+  targetHandlerPosition$,
+} from "../Card/Handler/handlers-position";
+// import CustomEdge from "../Edge/Edge";
 
 const nodeTypes: NodeTypes = {
   Card: CustomCard,
 };
 
-export const mousePosition$ = new Subject<{ x: number; y: number }>();
+// const edgeTypes: EdgeTypes = {
+//   type: CustomEdge,
+// };
+
 const OverviewFlow: FC<{ gNodes: Node[]; gEdges: Edge[] }> = ({
   gNodes,
   gEdges,
 }) => {
   const [nodes, setNodes, onNodesChange] = useLevelUpdatedNodesState(gNodes);
   const [edges, setEdges, onEdgesChange] = useLevelUpdatedEdgesState(gEdges);
-  const ReactFlowInstance = useReactFlow();
-  const { connection } = useAppSelector(({ card }) => card);
+  const newEdge = useAppSelector(({ card }) => card.edge);
   useEffect(() => {
-    setEdges((edges) => {
-      return addEdge(connection, edges);
-    });
-  }, [connection, setEdges]);
+    setEdges((edges) => addEdge(newEdge, edges));
+  }, [newEdge, setEdges]);
 
   useEffect(() => {
-    console.log(
-      "nodes changed! from internal state:",
-      ReactFlowInstance.getNodes()
-    );
-    // setNodes(ReactFlowInstance.getNodes());
-  }, [ReactFlowInstance.getNodes()]);
+    console.log(edges);
+  }, [edges]);
 
   const newNode = useObservableState(Nodes$);
   useEffect(() => {
@@ -59,27 +63,26 @@ const OverviewFlow: FC<{ gNodes: Node[]; gEdges: Edge[] }> = ({
       connectionMode={"loose" as ConnectionMode}
       nodes={nodes}
       edges={edges}
-      onNodesChange={(nodeChanges) => {
-        nodeChanges.map((change) => change.type);
-        console.log("what on change sees: ", ReactFlowInstance.getNodes());
-        console.log("so what actually changes is:", nodeChanges);
-        // setNodes(ReactFlowInstance.getNodes());
-        onNodesChange(nodeChanges);
+      onNodesChange={onNodesChange}
+      onConnectStart={(e) => {
+        sourceHandlerPosition$.next({
+          x: e.pageX - mapRef.current?.getBoundingClientRect().x,
+          y: e.pageY - mapRef.current?.getBoundingClientRect().y,
+        });
       }}
       // onConnect={onConnect}
-      onEdgesChange={(r) => {
-        console.log("changes edges:", r);
-        onEdgesChange(r);
-      }}
+      onEdgesChange={onEdgesChange}
       ref={mapRef}
       onConnectEnd={(e) => {
-        mousePosition$.next({
+        targetHandlerPosition$.next({
           x: e.pageX - mapRef.current?.getBoundingClientRect().x,
           y: e.pageY - mapRef.current?.getBoundingClientRect().y,
         });
       }}
       fitView
       nodeTypes={nodeTypes}
+      // edgeTypes={edgeTypes}
+      connectionLineType={ConnectionLineType.SmoothStep}
       attributionPosition='top-right'>
       <Controls />
       <Background

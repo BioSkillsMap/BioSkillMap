@@ -5,11 +5,17 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Handlers from "./Handler/Handler";
-import { useReactFlow, useUpdateNodeInternals } from "react-flow-renderer";
+import { NodeHandleBounds } from "react-flow-renderer";
 import Link from "next/link";
-import type { Data } from "../../../utils/create-card";
-
-const CustomCard: FC<{ data: Data; id: string }> = ({ data, id }) => {
+import type { Data } from "../../../utils/card-helpers";
+const CustomCard: FC<{
+  data: Data;
+  id: string;
+  handleBounds: NodeHandleBounds;
+}> = ({ data, id, handleBounds }) => {
+  useEffect(() => {
+    console.log(handleBounds);
+  }, [handleBounds]);
   return (
     <Card
       sx={{ minWidth: 275 }}

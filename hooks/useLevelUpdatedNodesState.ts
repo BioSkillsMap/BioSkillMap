@@ -8,7 +8,6 @@ export const useLevelUpdatedNodesState = (
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodesOnLevel);
   useEffect(() => {
     setNodes(initialNodesOnLevel);
-    // console.log("initialNodes: ", ReactFlowInstance.getNodes());
   }, [initialNodesOnLevel]);
 
   return [nodes, setNodes, onNodesChange] as const;

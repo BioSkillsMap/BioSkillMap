@@ -1,21 +1,23 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Connection, useReactFlow } from "react-flow-renderer";
+import { Connection, Edge, useReactFlow } from "react-flow-renderer";
 
 export interface HandlerStack {
   [id: string]: {
     handleX: number;
     handleY: number;
     targetID: string;
+    type: "target" | "source";
   }[];
 }
 
 interface CardInternals {
   handlers: HandlerStack;
-  connection: Connection;
+  edge: Edge;
 }
 
-interface Card {
+interface Handler {
   id: string;
+  type: "target" | "source";
   targetID: string;
   handlerX: number;
   handlerY: number;
@@ -25,47 +27,52 @@ export const CardSlice = createSlice({
   name: "counter",
   initialState: {
     handlers: {} as HandlerStack,
-    connection: {} as Connection,
+    edge: {} as Edge,
   } as CardInternals,
   reducers: {
     rebuildHandlers(_, action: PayloadAction<HandlerStack>) {
       console.log(action.payload);
       return {
         handlers: action.payload,
-        connection: {} as Connection,
+        edge: {} as Edge,
       };
     },
-    updateCard(
+    updateHandlers(
       state,
       action: PayloadAction<{
-        card: Card;
-        connection: Connection;
+        handler: Handler;
       }>
     ) {
       console.log(action.payload);
       const newState = {
         ...state,
-        connection: action.payload.connection,
         handlers: {
           ...state.handlers,
-          [action.payload.card.id]: [
-            ...(state.handlers[action.payload.card.id] || []),
+          [action.payload.handler.id]: [
+            ...(state.handlers[action.payload.handler.id] || []),
             {
-              handleX: action.payload.card.handlerX,
-              handleY: action.payload.card.handlerY,
-              targetID: action.payload.card.targetID,
+              handleX: action.payload.handler.handlerX,
+              handleY: action.payload.handler.handlerY,
+              targetID: action.payload.handler.targetID,
+              type: action.payload.handler.type,
             },
           ],
         },
       };
-
       // console.log(newState);
       return newState;
+    },
+    createConnection(state, action: PayloadAction<Edge>) {
+      return {
+        ...state,
+        edge: action.payload,
+      };
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { updateCard, rebuildHandlers } = CardSlice.actions;
+export const { updateHandlers, rebuildHandlers, createConnection } =
+  CardSlice.actions;
 
 export default CardSlice.reducer;

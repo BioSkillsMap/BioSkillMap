@@ -35,7 +35,6 @@ const Maps: FC<{ edges: Edge[]; nodes: Node[]; handlers: HandlerStack }> = ({
 
   useEffect(() => {
     dispatch(rebuildHandlers(handlers));
-    console.log("from rebuilt handlers:", ReactFlowInstance.getNodes());
   }, []);
 
   return (
