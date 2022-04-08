@@ -77,14 +77,15 @@ const OverviewFlow: FC<{ gNodes: Node[]; gEdges: Edge[] }> = ({
       }}
       fitView
       nodeTypes={nodeTypes}
-      connectionLineType={ConnectionLineType.SmoothStep}
-      attributionPosition='top-right'>
+      connectionLineType={ConnectionLineType.SimpleBezier}
+      attributionPosition="top-right"
+    >
       <Controls />
       <Background
         style={{
           backgroundColor: "#414565",
         }}
-        color='white'
+        color="white"
         gap={16}
       />
     </ReactFlow>

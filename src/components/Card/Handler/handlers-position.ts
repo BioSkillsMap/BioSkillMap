@@ -5,7 +5,7 @@ interface HandlerPosition {
   y: number;
 }
 
-export const sourceHandlerPosition$ = new Subject<HandlerPosition>();
+export const sourceHandlerPosition$ = new ReplaySubject<HandlerPosition>(1);
 export const targetHandlerPosition$ = new Subject<HandlerPosition>();
 
 export const handlersPosition = targetHandlerPosition$.pipe(
