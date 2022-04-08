@@ -15,13 +15,19 @@ const Tree = dynamic(() => import("../../src/components/Tree/Tree"), {
   ssr: false,
 });
 import CustomizeCard from "../../src/widgets/CustomizeCard";
-import { Fab } from "@mui/material";
+import { createTheme, Fab } from "@mui/material";
 import { AiOutlineUpload } from "react-icons/ai";
 import { useAppDispatch, useAppSelector } from "../../redux-hooks";
 import {
   HandlerStack,
   rebuildHandlers,
 } from "../../src/components/Card/card-slice";
+
+const Theme = createTheme({
+  palette: {
+    background: {},
+  },
+});
 
 const Maps: FC<{ edges: Edge[]; nodes: Node[]; handlers: HandlerStack }> = ({
   nodes,
@@ -43,12 +49,12 @@ const Maps: FC<{ edges: Edge[]; nodes: Node[]; handlers: HandlerStack }> = ({
       <Tree gEdges={edges} gNodes={nodes}></Tree>
       <CustomizeCard></CustomizeCard>
       <Fab
-        color='primary'
-        aria-label='add'
+        aria-label="add"
         sx={{
           position: "absolute",
           right: "2rem",
           top: "2rem",
+          fontSize: "1.7rem",
         }}
         onClick={() => {
           console.log((router.query.level as string) || "web-development", {
@@ -67,7 +73,8 @@ const Maps: FC<{ edges: Edge[]; nodes: Node[]; handlers: HandlerStack }> = ({
               handlers: JSON.stringify(card.handlers),
             }),
           });
-        }}>
+        }}
+      >
         <AiOutlineUpload />
       </Fab>
       <div className={styles.roadmap__container}></div>
