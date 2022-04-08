@@ -8,6 +8,7 @@ import ReactFlow, {
   Node,
   Edge,
   ConnectionLineType,
+  EdgeTypes,
 } from "react-flow-renderer";
 import CustomCard from "../Card/Card";
 import { useAppSelector } from "../../../redux-hooks";
@@ -19,15 +20,16 @@ import {
   sourceHandlerPosition$,
   targetHandlerPosition$,
 } from "../Card/Handler/handlers-position";
+import CustomEdge from "../Edge/Edge";
 // import CustomEdge from "../Edge/Edge";
 
 const nodeTypes: NodeTypes = {
   Card: CustomCard,
 };
 
-// const edgeTypes: EdgeTypes = {
-//   type: CustomEdge,
-// };
+const edgeTypes: EdgeTypes = {
+  ButtonEdge: CustomEdge,
+};
 
 const OverviewFlow: FC<{ gNodes: Node[]; gEdges: Edge[] }> = ({
   gNodes,
@@ -79,6 +81,7 @@ const OverviewFlow: FC<{ gNodes: Node[]; gEdges: Edge[] }> = ({
       nodeTypes={nodeTypes}
       connectionLineType={ConnectionLineType.SimpleBezier}
       attributionPosition="top-right"
+      edgeTypes={edgeTypes}
     >
       <Controls />
       <Background

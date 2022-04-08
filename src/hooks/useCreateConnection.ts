@@ -15,7 +15,7 @@ export const useCreateConnection = () => {
       targetHandle: targetID,
       source,
       target,
-      type: "simplebezier",
+      type: "ButtonEdge",
       markerEnd: { type: "arrowclosed" },
     } as Edge;
 
