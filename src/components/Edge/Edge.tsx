@@ -1,21 +1,12 @@
 import React, { FC, MouseEvent } from "react";
 import {
-  Edge,
   EdgeProps,
-  getBezierPath,
-  getEdgeCenter,
   useReactFlow,
-  getBezierEdgeCenter,
   getSimpleBezierEdgeCenter,
   getSimpleBezierPath,
 } from "react-flow-renderer";
 import edge__styles from "./edge.module.css";
 const foreignObjectSize = 40;
-
-const removeEdges = (event: MouseEvent, edges: Edge[], id: string) => {
-  event.stopPropagation();
-  return edges.filter((edge) => edge.id !== id);
-};
 
 const CustomEdge: FC<EdgeProps> = ({
   id,
@@ -43,14 +34,13 @@ const CustomEdge: FC<EdgeProps> = ({
     targetY,
   });
 
-  const edges = useReactFlow().getEdges();
-  const setEdges = useReactFlow().setEdges;
+  const ReactFlowInstance = useReactFlow();
   return (
     <>
       <path
         id={id}
         style={style}
-        className="react-flow__edge-path"
+        className='react-flow__edge-path'
         d={edgePath}
         markerEnd={markerEnd}
       />
@@ -60,13 +50,15 @@ const CustomEdge: FC<EdgeProps> = ({
         x={edgeCenterX - foreignObjectSize / 2}
         y={edgeCenterY - foreignObjectSize / 2}
         className={edge__styles.edgebuttonforeignobject}
-        requiredExtensions="http://www.w3.org/1999/xhtml"
-      >
+        requiredExtensions='http://www.w3.org/1999/xhtml'>
         <div>
           <button
             className={edge__styles.edgebutton}
-            onClick={(event) => setEdges(removeEdges(event, edges, id))}
-          >
+            onClick={(event) => {
+              ReactFlowInstance.setEdges((eds) => {
+                return eds.filter((edge) => edge.id === id);
+              }, "remove");
+            }}>
             ×
           </button>
         </div>

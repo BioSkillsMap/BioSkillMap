@@ -1,13 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import {
-  Handle,
-  useReactFlow,
-  useUpdateNodeInternals,
-  Node,
-  NodeHandleBounds,
-  Position,
-  addEdge,
-} from "react-flow-renderer";
+import { Handle } from "react-flow-renderer";
 import { useAppDispatch, useAppSelector } from "../../../../redux-hooks";
 import { useCreateConnection } from "../../../hooks/useCreateConnection";
 import { useUpdateHandlers } from "../../../hooks/useUpdateHandlers";

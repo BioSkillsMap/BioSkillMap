@@ -19,6 +19,7 @@ export const useCreateConnection = () => {
       markerEnd: { type: "arrowclosed" },
     } as Edge;
 
+    console.log(newEdge);
     dispatch(createConnection(newEdge));
   };
 };

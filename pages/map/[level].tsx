@@ -2,18 +2,14 @@ import { NextPageContext } from "next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { FC, useEffect } from "react";
-import ReactFlow, {
-  Edge,
-  Node,
-  useReactFlow,
-  useUpdateNodeInternals,
-} from "react-flow-renderer";
+import ReactFlow, { Edge, Node, useReactFlow } from "react-flow-renderer";
 import { prisma } from "../../prisma/prisma";
 import Toolbar from "../../src/components/Toolbar/Toolbar";
 import styles from "../../styles/Home.module.css";
 const Tree = dynamic(() => import("../../src/components/Tree/Tree"), {
   ssr: false,
 });
+
 import CustomizeCard from "../../src/widgets/CustomizeCard";
 import { createTheme, Fab } from "@mui/material";
 import { AiOutlineUpload } from "react-icons/ai";
@@ -49,7 +45,7 @@ const Maps: FC<{ edges: Edge[]; nodes: Node[]; handlers: HandlerStack }> = ({
       <Tree gEdges={edges} gNodes={nodes}></Tree>
       <CustomizeCard></CustomizeCard>
       <Fab
-        aria-label="add"
+        aria-label='add'
         sx={{
           position: "absolute",
           right: "2rem",
@@ -73,8 +69,7 @@ const Maps: FC<{ edges: Edge[]; nodes: Node[]; handlers: HandlerStack }> = ({
               handlers: JSON.stringify(card.handlers),
             }),
           });
-        }}
-      >
+        }}>
         <AiOutlineUpload />
       </Fab>
       <div className={styles.roadmap__container}></div>

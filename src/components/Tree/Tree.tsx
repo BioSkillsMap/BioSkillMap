@@ -12,8 +12,8 @@ import ReactFlow, {
 } from "react-flow-renderer";
 import CustomCard from "../Card/Card";
 import { useAppSelector } from "../../../redux-hooks";
-import { useLevelUpdatedNodesState } from "../../../hooks/useLevelUpdatedNodesState";
-import { useLevelUpdatedEdgesState } from "../../../hooks/useLevelUpdatedEdgesState";
+import { useLevelUpdatedNodesState } from "@hooks/useLevelUpdatedNodesState";
+import { useLevelUpdatedEdgesState } from "@hooks/useLevelUpdatedEdgesState";
 import { useObservableState } from "observable-hooks";
 import { Nodes$ } from "../../widgets/CustomizeCard";
 import {
@@ -61,7 +61,10 @@ const OverviewFlow: FC<{ gNodes: Node[]; gEdges: Edge[] }> = ({
       connectionMode={"loose" as ConnectionMode}
       nodes={nodes}
       edges={edges}
-      onNodesChange={onNodesChange}
+      onNodesChange={(c) => {
+        console.log(c);
+        onNodesChange(c);
+      }}
       onConnectStart={(e) => {
         sourceHandlerPosition$.next({
           x: e.pageX - mapRef.current?.getBoundingClientRect().x,
@@ -69,7 +72,13 @@ const OverviewFlow: FC<{ gNodes: Node[]; gEdges: Edge[] }> = ({
         });
       }}
       // onConnect={onConnect}
-      onEdgesChange={onEdgesChange}
+      onEdgesChange={(e) => {
+        console.log("CHANGES TO BE APPLIED: ", e);
+        onEdgesChange(e);
+      }}
+      onEdgesDelete={(e) => {
+        console.log("EDGE TO DELETE:", e);
+      }}
       ref={mapRef}
       onConnectEnd={(e) => {
         targetHandlerPosition$.next({
@@ -80,15 +89,14 @@ const OverviewFlow: FC<{ gNodes: Node[]; gEdges: Edge[] }> = ({
       fitView
       nodeTypes={nodeTypes}
       connectionLineType={ConnectionLineType.SimpleBezier}
-      attributionPosition="top-right"
-      edgeTypes={edgeTypes}
-    >
+      attributionPosition='top-right'
+      edgeTypes={edgeTypes}>
       <Controls />
       <Background
         style={{
           backgroundColor: "#414565",
         }}
-        color="white"
+        color='white'
         gap={16}
       />
     </ReactFlow>
