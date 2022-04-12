@@ -5,6 +5,8 @@ import {
   getSimpleBezierEdgeCenter,
   getSimpleBezierPath,
 } from "react-flow-renderer";
+import { useAppDispatch, useAppSelector } from "redux-hooks";
+import { deleteHandlers } from "../Card/card-slice";
 import edge__styles from "./edge.module.css";
 const foreignObjectSize = 40;
 
@@ -35,6 +37,8 @@ const CustomEdge: FC<EdgeProps> = ({
   });
 
   const ReactFlowInstance = useReactFlow();
+  const handlers = useAppSelector(({ card }) => card.handlers);
+  const dispatch = useAppDispatch();
   return (
     <>
       <path
@@ -58,6 +62,25 @@ const CustomEdge: FC<EdgeProps> = ({
               ReactFlowInstance.setEdges((eds) => {
                 return eds.filter((edge) => edge.id === id);
               }, "remove");
+
+              const edgeSourceID = ReactFlowInstance.getEdge(id)?.sourceHandle;
+              const sourceStack = ReactFlowInstance.getEdge(id)?.source;
+              const edgeTargetID = ReactFlowInstance.getEdge(id)?.targetHandle;
+              const targetStack = ReactFlowInstance.getEdge(id)?.target;
+
+              dispatch(
+                deleteHandlers({
+                  stack: sourceStack!,
+                  id: edgeSourceID!,
+                })
+              );
+
+              dispatch(
+                deleteHandlers({
+                  stack: targetStack!,
+                  id: edgeTargetID!,
+                })
+              );
             }}>
             ×
           </button>

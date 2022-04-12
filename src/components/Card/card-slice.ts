@@ -62,6 +62,28 @@ export const CardSlice = createSlice({
       // console.log(newState);
       return newState;
     },
+
+    deleteHandlers(
+      state,
+      action: PayloadAction<{
+        stack: string;
+        id: string;
+      }>
+    ) {
+      const stackAfterHandlerRemoval = state.handlers[
+        action.payload.stack
+      ].filter((handler) => handler.targetID !== action.payload.id);
+
+      console.log(stackAfterHandlerRemoval);
+
+      return {
+        ...state,
+        handlers: {
+          ...state.handlers,
+          [action.payload.stack]: stackAfterNodeRemoval,
+        },
+      };
+    },
     createConnection(state, action: PayloadAction<Edge>) {
       return {
         ...state,
@@ -72,7 +94,11 @@ export const CardSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { updateHandlers, rebuildHandlers, createConnection } =
-  CardSlice.actions;
+export const {
+  updateHandlers,
+  rebuildHandlers,
+  createConnection,
+  deleteHandlers,
+} = CardSlice.actions;
 
 export default CardSlice.reducer;
