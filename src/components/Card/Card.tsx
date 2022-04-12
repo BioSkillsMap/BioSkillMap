@@ -8,6 +8,7 @@ import Handlers from "./Handler/Handler";
 import { NodeHandleBounds } from "react-flow-renderer";
 import Link from "next/link";
 import type { Data } from "../../../utils/card-helpers";
+import { useAppSelector } from "redux-hooks";
 const CustomCard: FC<{
   data: Data;
   id: string;
@@ -16,6 +17,7 @@ const CustomCard: FC<{
   useEffect(() => {
     console.log(handleBounds);
   }, [handleBounds]);
+  const changes = useAppSelector(({ changes }) => changes);
   return (
     <Card
       sx={{ minWidth: 275 }}
@@ -36,7 +38,23 @@ const CustomCard: FC<{
       <CardActions>
         <Button size='small'>
           <Link href={`/map/${id}`}>
-            <a>ZOOM</a>
+            <a
+              onClick={(e) => {
+                const totalChanges = changes.reduce((acc, curr) => {
+                  return (
+                    acc +
+                    changes
+                      .filter((change) => change.id === curr.id)
+                      .reduce((acc, curr) => {
+                        const action = curr.type === "add" ? 1 : -1;
+                        return acc + action;
+                      }, 0)
+                  );
+                }, 0);
+                if (totalChanges) e.preventDefault();
+              }}>
+              ZOOM
+            </a>
           </Link>
         </Button>
       </CardActions>

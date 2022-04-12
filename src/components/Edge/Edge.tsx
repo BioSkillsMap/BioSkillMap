@@ -6,6 +6,7 @@ import {
   getSimpleBezierPath,
 } from "react-flow-renderer";
 import { useAppDispatch, useAppSelector } from "redux-hooks";
+import { recordChange } from "src/changes/changes";
 import { deleteHandlers } from "../Card/card-slice";
 import edge__styles from "./edge.module.css";
 const foreignObjectSize = 40;
@@ -67,6 +68,13 @@ const CustomEdge: FC<EdgeProps> = ({
               const sourceStack = ReactFlowInstance.getEdge(id)?.source;
               const edgeTargetID = ReactFlowInstance.getEdge(id)?.targetHandle;
               const targetStack = ReactFlowInstance.getEdge(id)?.target;
+
+              dispatch(
+                recordChange({
+                  id,
+                  type: "delete",
+                })
+              );
 
               dispatch(
                 deleteHandlers({

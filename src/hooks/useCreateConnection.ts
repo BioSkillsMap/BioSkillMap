@@ -11,6 +11,7 @@ export const useCreateConnection = () => {
     targetID: string
   ) => {
     const newEdge = {
+      id: `skillsmap_edge__${sourceID}_${targetID}`,
       sourceHandle: sourceID,
       targetHandle: targetID,
       source,

@@ -11,7 +11,7 @@ import ReactFlow, {
   EdgeTypes,
 } from "react-flow-renderer";
 import CustomCard from "../Card/Card";
-import { useAppSelector } from "../../../redux-hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux-hooks";
 import { useLevelUpdatedNodesState } from "@hooks/useLevelUpdatedNodesState";
 import { useLevelUpdatedEdgesState } from "@hooks/useLevelUpdatedEdgesState";
 import { useObservableState } from "observable-hooks";
@@ -21,6 +21,7 @@ import {
   targetHandlerPosition$,
 } from "../Card/Handler/handlers-position";
 import CustomEdge from "../Edge/Edge";
+import { recordChange } from "src/changes/changes";
 // import CustomEdge from "../Edge/Edge";
 
 const nodeTypes: NodeTypes = {
@@ -38,13 +39,18 @@ const OverviewFlow: FC<{ gNodes: Node[]; gEdges: Edge[] }> = ({
   const [nodes, setNodes, onNodesChange] = useLevelUpdatedNodesState(gNodes);
   const [edges, setEdges, onEdgesChange] = useLevelUpdatedEdgesState(gEdges);
   const newEdge = useAppSelector(({ card }) => card.edge);
+  const dispatch = useAppDispatch();
   useEffect(() => {
     setEdges((edges) => addEdge(newEdge, edges));
+    newEdge.id
+      ? dispatch(
+          recordChange({
+            id: newEdge.id,
+            type: "add",
+          })
+        )
+      : null;
   }, [newEdge, setEdges]);
-
-  useEffect(() => {
-    console.log(edges);
-  }, [edges]);
 
   const newNode = useObservableState(Nodes$);
   useEffect(() => {
