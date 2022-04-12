@@ -80,7 +80,7 @@ export const CardSlice = createSlice({
         ...state,
         handlers: {
           ...state.handlers,
-          [action.payload.stack]: stackAfterNodeRemoval,
+          [action.payload.stack]: stackAfterHandlerRemoval,
         },
       };
     },
