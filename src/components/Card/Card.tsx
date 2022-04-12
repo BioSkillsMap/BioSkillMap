@@ -5,7 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Handlers from "./Handler/Handler";
-import { NodeHandleBounds } from "react-flow-renderer";
+import { NodeHandleBounds, useReactFlow } from "react-flow-renderer";
 import Link from "next/link";
 import type { Data } from "../../../utils/card-helpers";
 import { useAppSelector } from "redux-hooks";
@@ -18,6 +18,7 @@ const CustomCard: FC<{
     console.log(handleBounds);
   }, [handleBounds]);
   const changes = useAppSelector(({ changes }) => changes);
+  const ReactFlowInstance = useReactFlow();
   return (
     <Card
       sx={{ minWidth: 275 }}
@@ -52,6 +53,17 @@ const CustomCard: FC<{
                   );
                 }, 0);
                 if (totalChanges) e.preventDefault();
+                const node = ReactFlowInstance.getNode(id);
+                const coordinates = node?.positionAbsolute;
+                const dimensions = { width: node?.width, height: node?.height };
+                ReactFlowInstance.setCenter(
+                  coordinates!.x + dimensions.width / 2,
+                  coordinates!.y + dimensions.height / 2,
+                  {
+                    duration: 800,
+                    zoom: 2,
+                  }
+                );
               }}>
               ZOOM
             </a>
