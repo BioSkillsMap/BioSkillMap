@@ -19,12 +19,6 @@ import {
   rebuildHandlers,
 } from "../../src/components/Card/card-slice";
 
-const Theme = createTheme({
-  palette: {
-    background: {},
-  },
-});
-
 const Maps: FC<{ edges: Edge[]; nodes: Node[]; handlers: HandlerStack }> = ({
   nodes,
   edges,
@@ -51,6 +45,11 @@ const Maps: FC<{ edges: Edge[]; nodes: Node[]; handlers: HandlerStack }> = ({
           right: "2rem",
           top: "2rem",
           fontSize: "1.7rem",
+          backgroundColor: "rgb(35, 36, 43)",
+          color: "white",
+          "&:hover": {
+            backgroundColor: "rgb(35, 36, 43)",
+          },
         }}
         onClick={() => {
           console.log((router.query.level as string) || "web-development", {
