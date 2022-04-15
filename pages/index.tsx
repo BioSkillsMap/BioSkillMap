@@ -1,6 +1,5 @@
-// import type { NextPage } from "next";
-// import dynamic from "next/dynamic";
+const Index = () => {
+    return <h1> HELLO </h1>;
+}
 
-// import { ReactFlowProvider } from "react-flow-renderer";
-
-// export default Home;
+export default Index;

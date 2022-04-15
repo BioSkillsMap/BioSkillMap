@@ -78,11 +78,7 @@ const Maps: FC<{ edges: Edge[]; nodes: Node[]; handlers: HandlerStack }> = ({
 
 export const getServerSideProps = async (context: NextPageContext) => {
   const { level } = context.query as { level: string };
-  const graph = await prisma.graph.findFirst({
-    where: {
-      level,
-    },
-  });
+  const graph = [];
   const nodes = JSON.parse(graph?.nodes || ("[]" as string));
   const edges = JSON.parse(graph?.edges || ("[]" as string));
   const handlers = JSON.parse(graph?.handlers || ("{}" as string));
