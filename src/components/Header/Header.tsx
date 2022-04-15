@@ -5,7 +5,7 @@ import SignIn from "./SignIn/SignIn";
 const Header = () => {
   return (
     <div className={header__style.container}>
-      <div className={header__style.navbar}>
+      <div className={header__style.navbar} >
         <Hamburger />
         <SignIn />
       </div>

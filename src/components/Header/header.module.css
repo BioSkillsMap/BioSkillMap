@@ -1,7 +1,10 @@
+.div {
+  color:white
+}
 .container {
   width: 100vw;
   height: 100vh;
-  background-color: aqua;
+  background-color: transparent;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -10,27 +13,28 @@
 .navbar {
   width: 100vw;
   height: 10vh;
-  background-color: blue;
+  background-color: #23242B;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 60px;
+  padding: 0px 60px 0px 0px;
 }
 
 .content {
   flex: 1;
-  background-color: rgb(81, 139, 76);
+  background-color: #414565;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 50px;
+  color:white
 }
 
 .header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: brown;
+  background-color: transparent;
   margin-top: 50px;
 }
 
