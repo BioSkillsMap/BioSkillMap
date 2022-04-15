@@ -1,0 +1,13 @@
+.container {
+  width: max-content;
+  background-color: rgb(153, 234, 245);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu {
+  color: black;
+  background-color: blueviolet;
+  font-size: 32px;
+}
