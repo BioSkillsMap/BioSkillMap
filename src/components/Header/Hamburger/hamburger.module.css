@@ -1,0 +1,15 @@
+.container {
+    width: auto;
+    height: 40px;
+    margin-left: 50px;
+}
+.line {
+    width: 45px;
+    height: 4px;
+    margin-top: 8px;
+    background-color: black;
+}
+
+.container:hover{
+    cursor: pointer;
+}

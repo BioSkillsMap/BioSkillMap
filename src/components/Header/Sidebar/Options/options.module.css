@@ -1,0 +1,41 @@
+.container {
+    width: fit-content;
+    flex: 1;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.option{
+    display: flex;
+    align-items: center;
+    margin: 20px 30px;
+    font-family: Hack, monospace;
+    color: #131313;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 24px;
+    padding: 10px;
+    border: 0;
+    transition: all 0.5s;
+    border-radius: 10px;
+    position: relative;
+}
+
+.option:hover{ 
+    transition: all 0.5s;
+    border-radius: 10px;
+    transform: scale(1.2);
+}
+
+.arrow {
+    padding: 0 30px;
+    transition: transform 0.5s;
+}
+
+.option:hover .arrow {
+    transform: rotate(90deg);
+    transition: transform 0.5s ease-in-out;
+}

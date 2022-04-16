@@ -1,86 +1,59 @@
-import { useObservable } from "observable-hooks";
-import { useCallback, useEffect, useRef } from "react";
+import { FC, useEffect, useRef } from "react";
 import ReactFlow, {
   addEdge,
   Controls,
   Background,
-  useNodesState,
-  useEdgesState,
   NodeTypes,
   ConnectionMode,
   Node,
+  Edge,
+  ConnectionLineType,
+  EdgeTypes,
 } from "react-flow-renderer";
-import { Subject, withLatestFrom } from "rxjs";
-import { trigger$ } from "../Toolbar/Buttons/Add-Card/AddCard";
 import CustomCard from "../Card/Card";
-import {
-  nodes as initialNodes,
-  edges as initialEdges,
-  Data,
-} from "./data/tree";
 import { useAppSelector } from "../../../redux-hooks";
+import { useLevelUpdatedNodesState } from "@hooks/useLevelUpdatedNodesState";
+import { useLevelUpdatedEdgesState } from "@hooks/useLevelUpdatedEdgesState";
+import { useObservableState } from "observable-hooks";
+import { Nodes$ } from "../../widgets/CustomizeCard";
+import {
+  sourceHandlerPosition$,
+  targetHandlerPosition$,
+} from "../Card/Handler/handlers-position";
+import CustomEdge from "../Edge/Edge";
+// import CustomEdge from "../Edge/Edge";
 
 const nodeTypes: NodeTypes = {
   Card: CustomCard,
 };
 
-const Cards = [
-  {
-    description: "The best HTML introduction I have ever seen",
-    id: "Web Development",
-    level: "beginner",
-    resource: "https://youtu.be/XUZFdXlr53k",
-  },
-  {
-    description: "The best CSS introduction I have ever seen",
-    id: "Web Development",
-    level: "beginner",
-    resource: "https://youtu.be/XUZFdXlr53k",
-  },
-  {
-    description: "The best JAVASCRIPT introduction I have ever seen",
-    id: "Web Development",
-    level: "beginner",
-    resource: "https://youtu.be/XUZFdXlr53k",
-  },
-] as Data[];
+const edgeTypes: EdgeTypes = {
+  ButtonEdge: CustomEdge,
+};
 
-export const mousePosition$ = new Subject<{ x: number; y: number }>();
-const OverviewFlow = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
-  const { connection } = useAppSelector(({ card }) => card);
+const OverviewFlow: FC<{ gNodes: Node[]; gEdges: Edge[] }> = ({
+  gNodes,
+  gEdges,
+}) => {
+  const [nodes, setNodes, onNodesChange] = useLevelUpdatedNodesState(gNodes);
+  const [edges, setEdges, onEdgesChange] = useLevelUpdatedEdgesState(gEdges);
+  const newEdge = useAppSelector(({ card }) => card.edge);
   useEffect(() => {
-    setEdges((edges) => {
-      return addEdge(connection, edges);
-    });
-  }, [connection, setEdges]);
+    setEdges((edges) => addEdge(newEdge, edges));
+  }, [newEdge, setEdges]);
 
-  const handleAddFile = (nodes: Node<Data>[]) => {
-    const newNode = {
-      id: `${nodes.length + 1}`,
-      type: "Card",
-      position: {
-        x: Math.random() * 500,
-        y: Math.random() * 500,
-      },
-      data: {
-        description: Cards[(nodes.length - 1) % 3].description,
-        id: Cards[(nodes.length - 1) % 3].id,
-        level: Cards[(nodes.length - 1) % 3].level,
-        resource: Cards[(nodes.length - 1) % 3].resource,
-      } as Data,
-    } as Node<Data>;
-    setNodes((nodes) => [...nodes, newNode]);
-  };
-
-  const nodes$ = useObservable((nodes$) => nodes$, [nodes]);
   useEffect(() => {
-    trigger$.pipe(withLatestFrom(nodes$)).subscribe(([_, [nodes]]) => {
-      handleAddFile(nodes);
-    });
-  }, []);
+    console.log(edges);
+  }, [edges]);
+
+  const newNode = useObservableState(Nodes$);
+  useEffect(() => {
+    newNode
+      ? setNodes((nodes) => {
+          return [...nodes, newNode];
+        })
+      : null;
+  }, [newNode]);
 
   const mapRef = useRef<HTMLDivElement>(null);
   return (
@@ -88,23 +61,36 @@ const OverviewFlow = () => {
       connectionMode={"loose" as ConnectionMode}
       nodes={nodes}
       edges={edges}
-      onNodesChange={(nodeChanges) => {
-        onNodesChange(nodeChanges);
+      onNodesChange={(c) => {
+        console.log(c);
+        onNodesChange(c);
+      }}
+      onConnectStart={(e) => {
+        sourceHandlerPosition$.next({
+          x: e.pageX - mapRef.current?.getBoundingClientRect().x,
+          y: e.pageY - mapRef.current?.getBoundingClientRect().y,
+        });
       }}
       // onConnect={onConnect}
-      onEdgesChange={(r) => {
-        onEdgesChange(r);
+      onEdgesChange={(e) => {
+        console.log("CHANGES TO BE APPLIED: ", e);
+        onEdgesChange(e);
+      }}
+      onEdgesDelete={(e) => {
+        console.log("EDGE TO DELETE:", e);
       }}
       ref={mapRef}
       onConnectEnd={(e) => {
-        mousePosition$.next({
+        targetHandlerPosition$.next({
           x: e.pageX - mapRef.current?.getBoundingClientRect().x,
           y: e.pageY - mapRef.current?.getBoundingClientRect().y,
         });
       }}
       fitView
       nodeTypes={nodeTypes}
-      attributionPosition='top-right'>
+      connectionLineType={ConnectionLineType.SimpleBezier}
+      attributionPosition='top-right'
+      edgeTypes={edgeTypes}>
       <Controls />
       <Background
         style={{

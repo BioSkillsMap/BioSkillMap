@@ -1,0 +1,10 @@
+{
+  "version": "v1",
+  "packages": {
+    "react-flow-renderer": {
+      "signature": "252761d18cbc80fdde23f787031c089c",
+      "file": true,
+      "replaced": "file:.yalc/react-flow-renderer-v2"
+    }
+  }
+}

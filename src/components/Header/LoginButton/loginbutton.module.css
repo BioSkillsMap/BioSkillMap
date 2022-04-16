@@ -1,0 +1,35 @@
+.login_btn {
+  font-family: Hack, monospace;
+  height: 100%;
+  background: transparent;
+  color: black;
+  cursor: pointer;
+  font-size: 24px;
+  border: 0;
+  transition: all 0.5s;
+  border-radius: 10px;
+  width: auto;
+  position: relative;
+  min-width: 250px;
+}
+.login_btn::after {
+  height: 100%;
+  content: "🗝️";
+  font-weight: 400;
+  position: absolute;
+  top: 50%;
+  bottom: 0;
+  opacity: 0;
+  transform: translate(-50px, -50%);
+}
+.login_btn:hover {
+  height: 100%;
+  transition: all 0.5s;
+  border-radius: 10px;
+  transform: translateX(-20px);
+}
+.login_btn:hover::after {
+  opacity: 1;
+  transform: translate(20px, -50%);
+  transition: all 0.5s;
+}
