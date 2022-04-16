@@ -5,8 +5,8 @@ const Profile = () => {
       <div className={profile__style.container}>
         <div className={profile__style.profile_photo}></div>
         <div className={profile__style.profile_info}>
-          <div>Numele Utilizatorului</div>
-          <button className={profile__style.option}>Profilul tău</button>
+          <div>Username</div>
+          <button className={profile__style.option}>Your Profile</button>
         </div>
       </div>
   )

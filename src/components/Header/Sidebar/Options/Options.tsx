@@ -6,13 +6,13 @@ const Options = () => {
       <div className={option__style.container}>
           {/* <div className={option__style.wrapper}>  */}
             <button className={option__style.option}>
-              Exploreaza în continuare 
+              Find Out More 
             </button>
             <button className={option__style.option}>
-                Hărțile favorite <div className={option__style.arrow}>➤</div>
+                Favorite Maps <div className={option__style.arrow}>➤</div>
             </button>
             <button className={option__style.option}>
-                Hărțile tale <div className={option__style.arrow}>➤</div>
+                Your Maps <div className={option__style.arrow}>➤</div>
             </button>
             <MapCard name="America" creator="Marian" link="#"/>
           {/* </div> */}
