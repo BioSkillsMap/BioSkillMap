@@ -1,0 +1,14 @@
+.starHolder {
+  position: absolute;
+  top: 9vh;
+  left: 90vw;
+  z-index: 1000;
+  width: fit-content;
+  height: fit-content;
+  background-color: transparent;
+  transform: scale(3, 3);
+}
+.starHolder:hover {
+  transform: scale(3.5, 3.5) rotate(5deg);
+  transition: 0.2s;
+}

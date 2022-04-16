@@ -1,4 +1,5 @@
 import { NextPageContext } from "next";
+import { AiOutlineStar } from "react-icons/ai";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { FC, useEffect } from "react";
@@ -6,6 +7,8 @@ import ReactFlow, { Edge, Node, useReactFlow } from "react-flow-renderer";
 import { prisma } from "../../prisma/prisma";
 import Toolbar from "../../src/components/Toolbar/Toolbar";
 import styles from "../../styles/Home.module.css";
+import level__styles from "./level.module.css";
+import { AiFillStar } from "react-icons/ai";
 const Tree = dynamic(() => import("../../src/components/Tree/Tree"), {
   ssr: false,
 });
@@ -35,6 +38,15 @@ const Maps: FC<{ edges: Edge[]; nodes: Node[]; handlers: HandlerStack }> = ({
 
   return (
     <div className={styles.container}>
+      <div className={level__styles.starHolder}>
+        <AiFillStar
+          onClick={(e) => {
+            if (e.currentTarget.getAttribute("color") != "yellow")
+              e.currentTarget.setAttribute("color", "yellow");
+            else e.currentTarget.setAttribute("color", "black");
+          }}
+        ></AiFillStar>
+      </div>
       <Toolbar></Toolbar>
       <Tree gEdges={edges} gNodes={nodes}></Tree>
       <CustomizeCard></CustomizeCard>
