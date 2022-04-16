@@ -2,10 +2,12 @@ import loginbutton__style from "./loginbutton.module.css";
 import { FiLogIn } from "react-icons/fi";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 const LoginButton = () => {
   const [hover, setHover] = useState(false);
-  return (
+  const user = useSession().data?.user;
+  console.log(user);
+  return !user?.name ? (
     <div>
       <button
         className={loginbutton__style.login_btn}
@@ -15,11 +17,17 @@ const LoginButton = () => {
         onMouseLeave={() => {
           setHover(false);
         }}
+        onClick={
+          () => {
+            signIn();
+          }
+        }
       >
         Login
       </button>
     </div>
-  );
+    
+  ) : null;
 };
 
 export default LoginButton;
