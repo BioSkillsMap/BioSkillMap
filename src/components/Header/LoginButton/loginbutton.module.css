@@ -2,7 +2,7 @@
   font-family: Hack, monospace;
   height: 100%;
   background: transparent;
-  color: #ffffff;
+  color: black;
   cursor: pointer;
   font-size: 24px;
   border: 0;
@@ -26,7 +26,6 @@
   height: 100%;
   transition: all 0.5s;
   border-radius: 10px;
-  color: #ffffff;
   transform: translateX(-20px);
 }
 .login_btn:hover::after {
