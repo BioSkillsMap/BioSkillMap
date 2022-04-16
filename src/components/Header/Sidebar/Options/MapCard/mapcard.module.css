@@ -1,0 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Mono&display=swap");
+
+.container {
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  background-color: #f7e8bb;
+  border-radius: 10px;
+  padding: 10px;
+  margin-left: 70px;
+}
+
+.creator {
+  position: relative;
+  left: 20px;
+  font-family: "Roboto Mono";
+  font-size: 12px;
+  margin-top: -2px;
+  color: #797596;
+}
+
+.name {
+  font-family: "Roboto Mono";
+  font-size: 16px;
+}

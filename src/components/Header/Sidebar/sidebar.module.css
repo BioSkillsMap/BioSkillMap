@@ -1,4 +1,3 @@
-/* rethink */
 .menu_items {
   position: absolute;
   top: 0;
@@ -17,7 +16,7 @@
   transform: translate(0%);
 }
 
-.close{
+.close {
   position: absolute;
   top: 20px;
   right: 20px;

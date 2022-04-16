@@ -4,16 +4,17 @@ import Options from './Options/Options';
 import { FC, useState, useEffect } from 'react';
 import { IconButton } from '@mui/material';
 import { IoClose } from 'react-icons/io5';
-const Sidebar: FC<{
-  open:boolean
-}> = ({ open }) => {
-  const [isOpen, setIsOpen] = useState(open);
-  useEffect(() => { setIsOpen(open) }, [open]);
+import { useAppSelector, useAppDispatch } from 'redux-hooks';
+import { closeSidebar } from './searchbar-slice';
+
+const Sidebar = () => {
+  const isOpen = useAppSelector(({ sidebar }) => sidebar);
+  const dispatch = useAppDispatch();
   return (
     <div className={`${sidebar__style.menu_items} ${isOpen ? sidebar__style.open : ""}`}>
       <IconButton className={sidebar__style.close} >
         <IoClose onClick={() => {
-          setIsOpen(false);
+          dispatch(closeSidebar());
         }}/>
       </IconButton>
       <Profile />
