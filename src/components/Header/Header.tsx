@@ -18,31 +18,53 @@ const Header = () => {
       <div className={header__style.content}>
         <div className={header__style.header}>
           <div>
-            {/* <img style={{
-            position: "absolute",
-            width: 100,
-            transform: "translate(500px,50px) rotate(124deg) scale(3,3)"
-          }} src="/p2.png" alt="broken"></img>
-           <img style={{
-             position: "absolute",
-             width: 100,
-             transform: "translate(430px,250px) rotate(-10deg) scale(1.2,1.2)"
-            }} src="/p4.png" alt="broken"></img>
-          <img style={{
-            position: "absolute",
-            width: 100,
-            transform: "translate(-500px,50px) rotate(124deg) scale(1,1)"
-          }} src="/p5.png" alt="broken"></img>
-           <img style={{
-             position: "absolute",
-             width: 100,
-             transform: "translate(-430px,250px) rotate(24deg) scale(1.2,1.2)"
-            }} src="/p6.png" alt="broken"></img>
-          <img style={{
-            position: "absolute",
-            width: 100,
-            transform: "translate(60px,370px) rotate(11deg) scale(1.3,1.3)"
-          }} src="/p7.png" alt="broken"></img> */}
+            <img
+              style={{
+                position: "absolute",
+                width: 100,
+                transform: "translate(500px,50px) rotate(124deg) scale(3,3)",
+              }}
+              src="/p2.png"
+              alt="broken"
+            ></img>
+            <img
+              style={{
+                position: "absolute",
+                width: 100,
+                transform:
+                  "translate(430px,250px) rotate(-10deg) scale(1.2,1.2)",
+              }}
+              src="/p4.png"
+              alt="broken"
+            ></img>
+            <img
+              style={{
+                position: "absolute",
+                width: 100,
+                transform: "translate(-500px,50px) rotate(124deg) scale(1,1)",
+              }}
+              src="/p5.png"
+              alt="broken"
+            ></img>
+            <img
+              style={{
+                position: "absolute",
+                width: 100,
+                transform:
+                  "translate(-430px,250px) rotate(24deg) scale(1.2,1.2)",
+              }}
+              src="/p6.png"
+              alt="broken"
+            ></img>
+            <img
+              style={{
+                position: "absolute",
+                width: 100,
+                transform: "translate(60px,370px) rotate(11deg) scale(1.3,1.3)",
+              }}
+              src="/p7.png"
+              alt="broken"
+            ></img>
             {/* <img style={{ // de pus undeva
             position: "absolute",
             width: 100,
