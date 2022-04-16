@@ -1,6 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Roboto+Mono&display=swap');
+
+
+
 .div {
   color:white
 }
+
+
 .container {
   width: 100vw;
   height: 100vh;
@@ -13,7 +19,7 @@
 .navbar {
   width: 100vw;
   height: 10vh;
-  background-color: #23242B;
+  background-color: #413f3f;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -22,12 +28,13 @@
 
 .content {
   flex: 1;
-  background-color: #414565;
+  background-color: #f7f4e5;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 50px;
-  color:white
+  color:black;
+  font-family: 'Roboto Mono';
 }
 
 .header {
@@ -41,11 +48,13 @@
 .h1 {
   padding: 0;
   margin: 0;
+  font-family: 'Roboto Mono';
 }
 
 .p {
   padding: 0;
   margin: 0;
+  font-family: 'Roboto Mono';
 }
 
 .search {
