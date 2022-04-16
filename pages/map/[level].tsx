@@ -39,7 +39,7 @@ const Maps: FC<{ edges: Edge[]; nodes: Node[]; handlers: HandlerStack }> = ({
       <Tree gEdges={edges} gNodes={nodes}></Tree>
       <CustomizeCard></CustomizeCard>
       <Fab
-        aria-label='add'
+        aria-label="add"
         sx={{
           position: "absolute",
           right: "2rem",
@@ -68,7 +68,8 @@ const Maps: FC<{ edges: Edge[]; nodes: Node[]; handlers: HandlerStack }> = ({
               handlers: JSON.stringify(card.handlers),
             }),
           });
-        }}>
+        }}
+      >
         <AiOutlineUpload />
       </Fab>
       <div className={styles.roadmap__container}></div>
@@ -78,7 +79,11 @@ const Maps: FC<{ edges: Edge[]; nodes: Node[]; handlers: HandlerStack }> = ({
 
 export const getServerSideProps = async (context: NextPageContext) => {
   const { level } = context.query as { level: string };
-  const graph = [];
+  const graph = await prisma.graph.findFirst({
+    where: {
+      level,
+    },
+  });
   const nodes = JSON.parse(graph?.nodes || ("[]" as string));
   const edges = JSON.parse(graph?.edges || ("[]" as string));
   const handlers = JSON.parse(graph?.handlers || ("{}" as string));

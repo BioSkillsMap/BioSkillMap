@@ -8,8 +8,8 @@ const SearchBar = () => {
   const HandleEvent = (e: KeyboardEvent<HTMLInputElement>) => {
     console.log(e.key);
     if (e.key === "Enter") {
-      router.push(`/map/${e.currentTarget.value}`);
-      // return <Redirect to="/map/" />
+      router.push(`/map/${e.currentTarget.value.toLocaleLowerCase()}`);
+      //return <Redirect to="/map/" />
     }
   };
   return (

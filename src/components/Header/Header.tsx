@@ -1,5 +1,4 @@
 import header__style from "./header.module.css";
-import SignIn from "./SignIn/SignIn";
 import Sidebar from "./Sidebar/Sidebar";
 import { useState } from "react";
 import SearchBar from "./SearchBar/searchbar";
